@@ -14,11 +14,13 @@
         }
         .left-panel {
             width: 30%;
-            padding: 20px;
-            background-color: #f5f5f5;
-            border-right: 1px solid #ddd;
+            padding: 16px;
+            background-color: #ffffff;
+            border-right: 1px solid #eaeaea;
             display: flex;
             flex-direction: column;
+            gap: 16px;
+            height: 100vh;
         }
         .right-panel {
             width: 70%;
@@ -27,117 +29,132 @@
             padding: 0;
             position: relative;
         }
+        .url-input-container {
+            position: relative;
+            margin-bottom: 10px;
+        }
         .url-input {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 10px 12px;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .url-input:focus {
+            outline: none;
+            border-color: #000;
+        }
+        .url-input::placeholder {
+            color: #adb5bd;
         }
         .drop-zone {
-            border: 2px dashed #aaa;
-            border-radius: 4px;
+            flex: 1;
+            border: 1px dashed #eaeaea;
+            border-radius: 6px;
             padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-            min-height: 100px;
+            transition: all 0.2s ease;
+            background: #fafafa;
         }
         .drop-zone.dragover {
-            background-color: #e1e1e1;
-            border-color: #666;
+            background: #f5f5f5;
+            border-color: #000;
         }
-        .link-item {
-            padding: 10px;
-            margin: 5px 0;
-            background: white;
-            border: 1px solid #ddd;
+        .drop-icon {
+            font-size: 24px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .article-group {
+            background: #fff;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+        }
+        .main-article {
+            padding: 16px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        .similar-articles {
+            padding: 16px;
+        }
+        .similar-articles h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+            margin: 0 0 12px 0;
+        }
+        .similar-article {
+            padding: 12px;
+            margin: 8px 0;
+            background: #fafafa;
             border-radius: 4px;
-            cursor: move;
         }
-        .link-item:hover {
-            background: #f0f0f0;
+        .similar-article:hover {
+            background: #f1f3f5;
         }
-        #links-container {
-            margin-top: 20px;
+        .link-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+            margin-bottom: 4px;
         }
-        .dropped-link {
-            margin: 10px 0;
-            padding: 10px;
-            background: white;
-            border-radius: 4px;
+        .dropped-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 12px;
+            display: block;
+            margin: 4px 0;
             word-break: break-all;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
         }
         .selector-text {
             font-family: monospace;
-            font-size: 0.9em;
-            color: #666;
+            font-size: 11px;
+            color: #999;
             background: #f5f5f5;
-            padding: 4px;
-            border-radius: 3px;
-            word-break: break-all;
+            padding: 6px;
+            border-radius: 4px;
+            margin-top: 6px;
         }
         #webpage-content {
             width: 100%;
             height: 100%;
             border: none;
         }
-        .article-group {
-            margin: 20px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .loading {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
         }
-        
-        .similar-articles {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #eee;
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 1px solid #000;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
         }
-        
-        .similar-articles h4 {
-            margin: 0 0 10px 0;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .drop-zone-empty {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             color: #666;
         }
-        
-        .similar-article {
-            margin: 5px 0;
-            padding: 5px;
-            background: #f9f9f9;
-        }
-        
-        .main-article {
-            background: #fff;
-            border-left: 3px solid #007bff;
-            padding-left: 10px;
-        }
-        
-        .link-title {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #333;
-        }
-        
-        .dropped-link {
-            padding: 10px;
-            margin: 5px 0;
-            background: white;
-            border-radius: 4px;
-            word-break: break-all;
-        }
-        
-        .dropped-link a {
-            color: #0066cc;
-            text-decoration: none;
-            display: block;
-            margin: 5px 0;
-            font-size: 0.9em;
-        }
-        
-        .dropped-link a:hover {
-            text-decoration: underline;
+        .drop-zone-empty svg {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 8px;
+            color: #666;
         }
     </style>
 </head>
@@ -145,8 +162,14 @@
     <div class="container">
         <div class="left-panel">
             <input type="text" id="url-input" class="url-input" placeholder="Enter URL...">
+            
             <div id="drop-zone" class="drop-zone">
-                Drop links here to analyze
+                <div class="drop-zone-empty">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V7a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Drop link here</span>
+                </div>
             </div>
         </div>
         <div class="right-panel">
@@ -157,16 +180,15 @@
     <script>
         document.getElementById('url-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const url = this.value;
+                this.classList.add('loading');
                 fetch('/fetch-page', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({url: url})
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({url: this.value})
                 })
                 .then(response => response.json())
                 .then(data => {
+                    this.classList.remove('loading');
                     if (data.error) {
                         alert(data.error);
                     } else {
@@ -195,6 +217,10 @@
                             }
                         };
                     }
+                })
+                .catch(error => {
+                    this.classList.remove('loading');
+                    alert('Error fetching page: ' + error);
                 });
             }
         });
@@ -213,6 +239,10 @@
         dropZone.addEventListener('drop', async (e) => {
             e.preventDefault();
             dropZone.classList.remove('dragover');
+            
+            // Show loading state
+            dropZone.classList.add('loading');
+            
             const link = e.dataTransfer.getData('text/plain');
             const selector = e.dataTransfer.getData('text/selector');
             const linkText = e.dataTransfer.getData('text/link-text');
@@ -270,6 +300,9 @@
             }
             
             dropZone.appendChild(container);
+            
+            // Remove loading state when done
+            dropZone.classList.remove('loading');
         });
     </script>
 </body>
