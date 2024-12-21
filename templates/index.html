@@ -191,6 +191,22 @@
             const loadingOverlay = document.querySelector('.loading-overlay');
             const submitButton = document.getElementById('submitButton');
             const urlForm = document.getElementById('urlForm');
+            const generateRssBtn = document.getElementById('generateRss');
+            const rssPreview = document.getElementById('rssPreview');
+            const rssCode = document.getElementById('rssCode');
+
+            // Store dropped elements' data
+            const droppedElements = {
+                title: null,
+                description: null,
+                link: null
+            };
+
+            function updateGenerateButton() {
+                generateRssBtn.disabled = !(droppedElements.title && 
+                                         droppedElements.description && 
+                                         droppedElements.link);
+            }
 
             // Form submission handling
             urlForm.addEventListener('submit', function() {
@@ -199,7 +215,7 @@
             });
 
             // Drag and drop functionality for all drop zones
-            dropZones.forEach(dropZone => {
+            dropZones.forEach((dropZone, index) => {
                 dropZone.addEventListener('dragover', function(e) {
                     e.preventDefault();
                     this.classList.add('dragover');
@@ -213,18 +229,25 @@
                     e.preventDefault();
                     this.classList.remove('dragover');
                     
-                    const classData = e.dataTransfer.getData('text/plain');
-                    if (classData) {
-                        // Clear existing content except title
+                    const data = e.dataTransfer.getData('text/plain');
+                    if (data) {
                         const title = this.querySelector('.drop-zone-title');
                         this.innerHTML = '';
                         this.appendChild(title);
 
-                        // Add new element info
                         const elementInfo = document.createElement('div');
                         elementInfo.className = 'dropped-element';
-                        elementInfo.textContent = classData;
+                        elementInfo.textContent = data;
                         this.appendChild(elementInfo);
+
+                        // Store the data
+                        const elementType = index === 0 ? 'title' : 
+                                          index === 1 ? 'description' : 'link';
+                        droppedElements[elementType] = {
+                            data: data
+                        };
+
+                        updateGenerateButton();
                     }
                 });
             });
@@ -239,8 +262,24 @@
                     
                     const script = iframeDoc.createElement('script');
                     script.textContent = `
-                        function getElementInfo(element) {
-                            // Get class hierarchy
+                        function findClosestLink(element) {
+                            if (element.tagName === 'A' && element.href) {
+                                return element.href;
+                            }
+                            
+                            let current = element;
+                            while (current && current.tagName !== 'BODY' && current.tagName !== 'HTML') {
+                                if (current.tagName === 'A' && current.href) {
+                                    return current.href;
+                                }
+                                current = current.parentElement;
+                            }
+                            
+                            const linkChild = element.querySelector('a[href]');
+                            return linkChild ? linkChild.href : 'No link found';
+                        }
+
+                        function getClassHierarchy(element) {
                             let hierarchy = [];
                             let current = element;
                             
@@ -250,25 +289,21 @@
                                 }
                                 current = current.parentElement;
                             }
-
-                            // Get element's inner text
-                            const innerText = element.innerText.trim();
-                            const textContent = innerText ? 
-                                '\\n\\nContent: "' + innerText.substring(0, 100) + (innerText.length > 100 ? '..."' : '"') 
-                                : '\\n\\nNo text content';
-
-                            return {
-                                hierarchy: hierarchy.length > 0 ? hierarchy.join('\\n→ ') : 'No classes found',
-                                text: textContent
-                            };
+                            
+                            return hierarchy.length > 0 ? hierarchy.join('\\n→ ') : 'No classes found';
                         }
 
                         function handleDragStart(event) {
                             const element = event.target;
-                            const elementInfo = getElementInfo(element);
-                            event.dataTransfer.setData('text/plain', 
-                                'Class Hierarchy:\\n' + elementInfo.hierarchy + elementInfo.text);
-                            return false;
+                            const hierarchy = getClassHierarchy(element);
+                            const content = element.innerText.trim();
+                            const link = findClosestLink(element);
+                            
+                            const data = 'Class Hierarchy:\\n' + hierarchy + 
+                                       '\\n\\nContent: "' + content + '"' +
+                                       '\\n\\nLink: ' + link;
+                            
+                            event.dataTransfer.setData('text/plain', data);
                         }
 
                         document.addEventListener('mouseover', function(e) {
