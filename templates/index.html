@@ -35,13 +35,28 @@
             height: 80vh;
             border: none;
         }
+        .drop-zones-container {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
         .drop-zone {
             border: 2px dashed #ccc;
             border-radius: 5px;
-            padding: 20px;
-            margin-top: 20px;
-            min-height: 100px;
+            padding: 15px;
+            min-height: 80px;
             text-align: center;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone-title {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
         .drop-zone.dragover {
@@ -50,13 +65,14 @@
         }
 
         .dropped-element {
-            margin: 10px 0;
+            margin: 5px 0;
             padding: 10px;
-            background-color: #f0f0f0;
+            background-color: white;
             border-radius: 4px;
             white-space: pre-wrap;
             font-family: monospace;
             line-height: 1.4;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .loading-overlay {
@@ -137,11 +153,22 @@
                     <ol>
                         <li>Hover over elements to see which are draggable</li>
                         <li>Click and drag highlighted elements</li>
-                        <li>Drop them below to see their class hierarchy</li>
+                        <li>Drop them in any of the boxes below to compare class hierarchies</li>
                     </ol>
                 </div>
-                <div id="dropZone" class="drop-zone">
-                    Drop elements here to see their class names
+                <div class="drop-zones-container">
+                    <div class="drop-zone" id="dropZone1">
+                        <div class="drop-zone-title">Element 1</div>
+                        <div class="drop-zone-placeholder">Drop first element here</div>
+                    </div>
+                    <div class="drop-zone" id="dropZone2">
+                        <div class="drop-zone-title">Element 2</div>
+                        <div class="drop-zone-placeholder">Drop second element here</div>
+                    </div>
+                    <div class="drop-zone" id="dropZone3">
+                        <div class="drop-zone-title">Element 3</div>
+                        <div class="drop-zone-placeholder">Drop third element here</div>
+                    </div>
                 </div>
             </form>
         </div>
@@ -159,7 +186,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const dropZone = document.getElementById('dropZone');
+            const dropZones = document.querySelectorAll('.drop-zone');
             const iframe = document.querySelector('iframe');
             const loadingOverlay = document.querySelector('.loading-overlay');
             const submitButton = document.getElementById('submitButton');
@@ -171,27 +198,35 @@
                 submitButton.disabled = true;
             });
 
-            // Drag and drop functionality
-            dropZone.addEventListener('dragover', function(e) {
-                e.preventDefault();
-                this.classList.add('dragover');
-            });
+            // Drag and drop functionality for all drop zones
+            dropZones.forEach(dropZone => {
+                dropZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
 
-            dropZone.addEventListener('dragleave', function(e) {
-                this.classList.remove('dragover');
-            });
+                dropZone.addEventListener('dragleave', function(e) {
+                    this.classList.remove('dragover');
+                });
 
-            dropZone.addEventListener('drop', function(e) {
-                e.preventDefault();
-                this.classList.remove('dragover');
-                
-                const classData = e.dataTransfer.getData('text/plain');
-                if (classData) {
-                    const elementInfo = document.createElement('div');
-                    elementInfo.className = 'dropped-element';
-                    elementInfo.textContent = classData;
-                    this.appendChild(elementInfo);
-                }
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    
+                    const classData = e.dataTransfer.getData('text/plain');
+                    if (classData) {
+                        // Clear existing content except title
+                        const title = this.querySelector('.drop-zone-title');
+                        this.innerHTML = '';
+                        this.appendChild(title);
+
+                        // Add new element info
+                        const elementInfo = document.createElement('div');
+                        elementInfo.className = 'dropped-element';
+                        elementInfo.textContent = classData;
+                        this.appendChild(elementInfo);
+                    }
+                });
             });
 
             // Iframe load handling
@@ -204,7 +239,8 @@
                     
                     const script = iframeDoc.createElement('script');
                     script.textContent = `
-                        function getClassHierarchy(element) {
+                        function getElementInfo(element) {
+                            // Get class hierarchy
                             let hierarchy = [];
                             let current = element;
                             
@@ -214,14 +250,24 @@
                                 }
                                 current = current.parentElement;
                             }
-                            
-                            return hierarchy.length > 0 ? hierarchy.join('\\n→ ') : 'No classes found';
+
+                            // Get element's inner text
+                            const innerText = element.innerText.trim();
+                            const textContent = innerText ? 
+                                '\\n\\nContent: "' + innerText.substring(0, 100) + (innerText.length > 100 ? '..."' : '"') 
+                                : '\\n\\nNo text content';
+
+                            return {
+                                hierarchy: hierarchy.length > 0 ? hierarchy.join('\\n→ ') : 'No classes found',
+                                text: textContent
+                            };
                         }
 
                         function handleDragStart(event) {
                             const element = event.target;
-                            const classHierarchy = getClassHierarchy(element);
-                            event.dataTransfer.setData('text/plain', classHierarchy);
+                            const elementInfo = getElementInfo(element);
+                            event.dataTransfer.setData('text/plain', 
+                                'Class Hierarchy:\\n' + elementInfo.hierarchy + elementInfo.text);
                             return false;
                         }
 
