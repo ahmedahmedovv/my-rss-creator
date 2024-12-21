@@ -21,10 +21,17 @@ def fetch_page():
             href = a.get('href')
             if not href.startswith(('http://', 'https://')):
                 href = requests.compat.urljoin(url, href)
+            
+            # Generate CSS selector for the link
+            selector = generate_css_selector(a)
+            
             # Add draggable attribute and class
             a['draggable'] = 'true'
             a['class'] = a.get('class', []) + ['draggable-link']
             a['data-href'] = href  # Store the full URL
+            a['data-selector'] = selector  # Store the CSS selector
+            # Add data attribute for similar articles detection
+            a['data-similar-selector'] = generate_article_pattern(a)
             
         # Add custom CSS and JS to the page
         style_tag = soup.new_tag('style')
@@ -52,6 +59,54 @@ def fetch_page():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 400
+
+def generate_css_selector(element):
+    """Generate a CSS selector for the given element"""
+    selector_parts = []
+    
+    while element and element.name:
+        # Get the element's tag name
+        current = element.name
+        
+        # Add id if present
+        if element.get('id'):
+            current += f'#{element["id"]}'
+        # Add classes if present
+        elif element.get('class'):
+            classes = [c for c in element['class'] if c != 'draggable-link']
+            if classes:
+                current += '.' + '.'.join(classes)
+                
+        # Add position if needed
+        siblings = element.find_previous_siblings(element.name)
+        if siblings:
+            current += f':nth-of-type({len(siblings) + 1})'
+            
+        selector_parts.append(current)
+        element = element.parent
+        
+    return ' > '.join(reversed(selector_parts))
+
+def generate_article_pattern(element):
+    """Generate a more generic selector pattern for article links"""
+    # Get parent elements up to 3 levels
+    parents = []
+    current = element
+    for _ in range(3):
+        if not current.parent:
+            break
+        current = current.parent
+        parents.append(current)
+    
+    # Find common patterns
+    pattern = {
+        'tag': element.name,
+        'classes': [c for c in element.get('class', []) if c != 'draggable-link'],
+        'parent_tags': [p.name for p in parents],
+        'parent_classes': [c for p in parents for c in p.get('class', [])]
+    }
+    
+    return str(pattern)  # Convert to string for data attribute
 
 if __name__ == '__main__':
     app.run(debug=True)
