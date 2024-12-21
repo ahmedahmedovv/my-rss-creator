@@ -1,0 +1,2 @@
+XPath: /HTML[@class="vjsvxpbfnjd idc0_343"]/BODY/DIV[@class="page-wrapper category-page Folder o-visible"]/SECTION[@class="category"]/DIV[@class="container"]/SECTION/DIV[@class="container"]/DIV[@class="row"]/DIV[@class="col-24 col-lg-16 col-xl-17"]/DIV[@class="category-widget son-dakika-haberleri"]/DIV[@class="category__list__item son-dakika-haberleri"]/DIV/H2/A
+CSS: a

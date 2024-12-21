@@ -3,678 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RSS Feed Creator</title>
+    <title>HTML Source Code Viewer</title>
     <style>
-        .url-panel {
-            margin: 20px 0;
+        .container {
+            display: flex;
+            padding: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
-        .content-panel {
-            margin-top: 20px;
-            padding: 10px;
+        .panel {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
             border: 1px solid #ccc;
-            width: 100%;
-            height: 600px;
+            border-radius: 5px;
+        }
+        .source-code {
+            white-space: pre-wrap;
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .rendered-content {
+            max-height: 80vh;
+            overflow-y: auto;
         }
         iframe {
             width: 100%;
-            height: 100%;
+            height: 80vh;
             border: none;
         }
-        #xpath-display, #xpath-history {
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            text-align: center;
+        }
+
+        .drop-zone.dragover {
+            background-color: #e1e1e1;
+            border-color: #999;
+        }
+
+        .dropped-element {
             margin: 10px 0;
             padding: 10px;
             background-color: #f0f0f0;
-            border: 1px solid #ddd;
-        }
-        #xpath-display {
-            display: none;
-        }
-        #rss-config {
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-        }
-        .xpath-item {
-            padding: 10px;
-            margin: 5px 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        .action-btn {
-            padding: 5px 10px;
-            cursor: pointer;
-            border: none;
-            border-radius: 3px;
-        }
-        .title-btn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .desc-btn {
-            background-color: #2196F3;
-            color: white;
-        }
-        .link-btn {
-            background-color: #9C27B0;
-            color: white;
-        }
-        .assigned {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .hover-highlight {
-            outline: 2px solid red !important;
-        }
-        .click-highlight {
-            outline: 2px solid blue !important;
-        }
-        #rss-preview {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-        }
-        .assigned-item {
-            margin: 5px 0;
-            padding: 5px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-        }
-        .selection-buttons {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-        }
-        .select-btn {
-            padding: 8px 15px;
-            margin: 0 5px;
-            cursor: pointer;
-            border: none;
-            border-radius: 3px;
-        }
-        .select-btn.active {
-            outline: 2px solid #000;
-        }
-        .title-btn {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .desc-btn {
-            background-color: #2196F3;
-            color: white;
-        }
-        .link-btn {
-            background-color: #9C27B0;
-            color: white;
-        }
-        #rss-preview {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-        }
-        .preview-content {
-            max-height: 400px;
-            overflow-y: auto;
-            background: white;
-            padding: 15px;
             border-radius: 4px;
-            border: 1px solid #dee2e6;
-        }
-        .preview-content pre {
-            margin: 0;
             white-space: pre-wrap;
             font-family: monospace;
-            font-size: 14px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
-        /* Add new panel layout styles */
-        .main-container {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 20px;
-            padding: 20px;
-            height: calc(100vh - 40px);
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-        
-        .left-panel {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            height: 100%;
-            overflow-y: auto;
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-        
-        .right-panel {
-            display: grid;
-            grid-template-rows: 1fr auto;
-            gap: 20px;
-            height: 100%;
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        
-        .content-panel {
-            height: 100%;
-            margin: 0;
+
+        .panel button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        
-        #rss-preview {
-            height: 300px;
-            margin: 0;
-            display: block;
+
+        .panel button:hover {
+            background-color: #45a049;
         }
-        
-        /* Update existing styles */
-        .preview-content {
-            max-height: 250px;
+
+        .panel button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
-        
-        /* Add to existing styles */
-        .assigned-item {
-            margin: 10px 0;
+
+        .drop-zone {
+            transition: all 0.3s ease;
+        }
+
+        .instructions {
+            margin-top: 10px;
             padding: 10px;
             background-color: #f8f9fa;
             border-radius: 4px;
-            border: 1px solid #dee2e6;
-        }
-        
-        .assigned-item span {
-            display: block;
-        }
-        
-        .assigned-item small {
-            margin-top: 5px;
-            display: block;
-            font-family: monospace;
-            word-break: break-all;
-        }
-
-        /* Add to existing styles */
-        .assigned-item {
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .assigned-item.drag-over {
-            background-color: #e9ecef;
-            border: 2px dashed #0d6efd;
-        }
-
-        /* Style for elements being dragged in iframe */
-        .being-dragged {
-            outline: 2px solid #0d6efd !important;
-            opacity: 0.7;
-        }
-
-        /* Visual cue for drop zones */
-        #title-path, #desc-path, #link-path {
-            position: relative;
-        }
-
-        #title-path::before, #desc-path::before, #link-path::before {
-            content: "Drop here";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.2s;
-            pointer-events: none;
-        }
-
-        .drag-over::before {
-            opacity: 1 !important;
-        }
-
-        /* Make the assigned items look more interactive */
-        .assigned-item {
-            position: relative;
-            padding: 15px;
-            margin: 10px 0;
-            background: #fff;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .assigned-item::after {
-            content: "Drop element here";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #6c757d;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .assigned-item.drag-over::after {
-            opacity: 1;
-        }
-
-        /* New instruction panel styles */
-        .instructions-panel {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .instruction-steps {
-            margin-top: 15px;
-        }
-
-        .step {
-            margin-bottom: 20px;
-            position: relative;
-            padding-left: 40px;
-        }
-
-        .step-number {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 28px;
-            height: 28px;
-            background: #0d6efd;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .step ul {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-
-        .step li {
-            margin: 5px 0;
-            color: #666;
-        }
-
-        /* Updated dropzone styles */
-        .dropzone {
-            background: #ffffff;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-
-        .dropzone-label {
-            text-align: center;
-            color: #6c757d;
-        }
-
-        .dropzone-label h4 {
-            margin: 10px 0 5px;
-            color: #212529;
-        }
-
-        .dropzone-label p {
-            margin: 0;
             font-size: 0.9em;
-        }
-
-        .drag-icon {
-            font-size: 24px;
-        }
-
-        .dropzone.drag-over {
-            background: #e9ecef;
-            border-color: #0d6efd;
-            border-style: dashed;
-        }
-
-        /* Updated assigned item styles */
-        .assigned-item span {
-            display: block;
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 4px;
-            word-break: break-all;
-        }
-
-        /* Preview button style */
-        .preview-button {
-            width: 100%;
-            padding: 12px;
-            background: #0d6efd;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .preview-button:hover {
-            background: #0b5ed7;
-        }
-
-        /* Dragging styles */
-        .being-dragged {
-            outline: 2px solid #0d6efd !important;
-            outline-offset: 2px;
-            opacity: 0.7;
-        }
-
-        /* Hover effect for draggable elements in iframe */
-        #content-frame *:hover {
-            cursor: grab;
-        }
-
-        #content-frame *:active {
-            cursor: grabbing;
-        }
-
-        /* Loading state for preview button */
-        #preview-rss:disabled {
-            background-color: #6c757d;
-            cursor: wait;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="left-panel">
-            <h1>RSS Feed Creator</h1>
-            
-            <div class="url-panel">
-                <form method="POST">
-                    <input type="url" name="url" placeholder="Enter URL to create RSS feed" required>
-                    <button type="submit">Load Page</button>
-                </form>
-            </div>
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
 
-            <div class="instructions-panel">
-                <h3>How to Create RSS Feed</h3>
-                <div class="instruction-steps">
-                    <div class="step">
-                        <span class="step-number">1</span>
-                        <p>Enter the website URL above and click "Load Page"</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">2</span>
-                        <p>From the loaded page, drag elements to the boxes below:</p>
-                        <ul>
-                            <li>Drag article titles to the "Title" box</li>
-                            <li>Drag article text to the "Description" box</li>
-                            <li>Drag article links to the "Link" box</li>
-                        </ul>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">3</span>
-                        <p>Click "Preview RSS" to see your feed</p>
-                    </div>
+    <div class="container">
+        <div class="panel">
+            <h2>Enter URL</h2>
+            <form method="POST" id="urlForm">
+                <input type="url" name="url" placeholder="Enter webpage URL" 
+                       value="{{ url if url }}" required style="width: 100%; padding: 8px;">
+                <button type="submit" id="submitButton" style="margin-top: 10px; padding: 8px 16px;">
+                    Load Page
+                </button>
+                <div class="instructions">
+                    Once the page loads:
+                    <ol>
+                        <li>Hover over elements to see which are draggable</li>
+                        <li>Click and drag highlighted elements</li>
+                        <li>Drop them below to see their class hierarchy</li>
+                    </ol>
                 </div>
-            </div>
-
-            <div id="rss-config">
-                <h3>Drop Elements Here</h3>
-                <div id="assigned-paths">
-                    <div class="assigned-item dropzone" id="title-path">
-                        <div class="dropzone-label">
-                            <i class="drag-icon">📥</i>
-                            <h4>Title</h4>
-                            <p>Drag article title here</p>
-                        </div>
-                        <span>Not assigned</span>
-                    </div>
-                    <div class="assigned-item dropzone" id="desc-path">
-                        <div class="dropzone-label">
-                            <i class="drag-icon">📥</i>
-                            <h4>Description</h4>
-                            <p>Drag article description here</p>
-                        </div>
-                        <span>Not assigned</span>
-                    </div>
-                    <div class="assigned-item dropzone" id="link-path">
-                        <div class="dropzone-label">
-                            <i class="drag-icon">📥</i>
-                            <h4>Link</h4>
-                            <p>Drag article link here</p>
-                        </div>
-                        <span>Not assigned</span>
-                    </div>
+                <div id="dropZone" class="drop-zone">
+                    Drop elements here to see their class names
                 </div>
-                <button id="preview-rss" class="preview-button">Preview RSS</button>
-            </div>
+            </form>
         </div>
-
-        <div class="right-panel">
-            {% if content %}
-            <div class="content-panel">
-                <iframe id="content-frame" src="/proxy?url={{ url|urlencode }}" frameborder="0"></iframe>
-            </div>
-            {% endif %}
-
-            <div id="rss-preview">
-                <h3>RSS Preview</h3>
-                <div class="preview-content">
-                    <pre style="white-space: pre-wrap;"></pre>
-                </div>
+        <div class="panel">
+            <h2>Rendered Page</h2>
+            <div class="rendered-content">
+                {% if rendered_content %}
+                    <iframe srcdoc="{{ rendered_content }}"></iframe>
+                {% else %}
+                    Enter a URL to see the rendered page
+                {% endif %}
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait for iframe to load
-            const iframe = document.getElementById('content-frame');
-            if (!iframe) return;
+            const dropZone = document.getElementById('dropZone');
+            const iframe = document.querySelector('iframe');
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            const submitButton = document.getElementById('submitButton');
+            const urlForm = document.getElementById('urlForm');
 
-            iframe.addEventListener('load', function() {
+            // Form submission handling
+            urlForm.addEventListener('submit', function() {
+                loadingOverlay.style.display = 'flex';
+                submitButton.disabled = true;
+            });
+
+            // Drag and drop functionality
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            dropZone.addEventListener('dragleave', function(e) {
+                this.classList.remove('dragover');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                
+                const classData = e.dataTransfer.getData('text/plain');
+                if (classData) {
+                    const elementInfo = document.createElement('div');
+                    elementInfo.className = 'dropped-element';
+                    elementInfo.textContent = classData;
+                    this.appendChild(elementInfo);
+                }
+            });
+
+            // Iframe load handling
+            iframe?.addEventListener('load', function() {
                 try {
-                    const iframeDoc = iframe.contentWindow.document;
+                    loadingOverlay.style.display = 'none';
+                    submitButton.disabled = false;
+
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
                     
-                    // Add styles to iframe
-                    const styleSheet = iframeDoc.createElement('style');
-                    styleSheet.textContent = `
-                        * { cursor: grab !important; }
-                        *.dragging { 
-                            outline: 2px solid #0d6efd !important;
-                            opacity: 0.7 !important;
-                        }
-                    `;
-                    iframeDoc.head.appendChild(styleSheet);
-
-                    // Make elements draggable
-                    iframeDoc.addEventListener('mousedown', function(e) {
-                        let element = e.target;
-                        
-                        // Make element draggable
-                        element.setAttribute('draggable', 'true');
-                        
-                        // Handle drag start
-                        element.addEventListener('dragstart', function(e) {
-                            console.log('Drag started');
-                            element.classList.add('dragging');
-                            window._draggedElement = element;
-                        }, { once: true });
-
-                        // Handle drag end
-                        element.addEventListener('dragend', function() {
-                            console.log('Drag ended');
-                            element.classList.remove('dragging');
-                            element.setAttribute('draggable', 'false');
-                        }, { once: true });
-                    });
-
-                    // Handle drop zones
-                    const dropZones = document.querySelectorAll('.dropzone');
-                    dropZones.forEach(zone => {
-                        zone.addEventListener('dragover', function(e) {
-                            e.preventDefault();
-                            this.classList.add('drag-over');
-                        });
-
-                        zone.addEventListener('dragleave', function() {
-                            this.classList.remove('drag-over');
-                        });
-
-                        zone.addEventListener('drop', function(e) {
-                            e.preventDefault();
-                            console.log('Drop event triggered');
+                    const script = iframeDoc.createElement('script');
+                    script.textContent = `
+                        function getClassHierarchy(element) {
+                            let hierarchy = [];
+                            let current = element;
                             
-                            this.classList.remove('drag-over');
-                            const draggedElement = window._draggedElement;
-                            
-                            if (draggedElement) {
-                                const type = this.id.replace('-path', '');
-                                console.log('Dropping into:', type);
-                                
-                                // Get element info
-                                const elementInfo = getElementInfo(draggedElement);
-                                
-                                // Update display
-                                this.querySelector('span').innerHTML = `
-                                    <div>${elementInfo.text.substring(0, 50)}${elementInfo.text.length > 50 ? '...' : ''}</div>
-                                    <small style="color: #666; font-size: 0.8em;">
-                                        ${elementInfo.parentInfo} → ${elementInfo.elementInfo}
-                                    </small>
-                                `;
-                                
-                                // Store the selection
-                                switch(type) {
-                                    case 'title':
-                                        rssConfig.titleXPath = elementInfo.text;
-                                        break;
-                                    case 'desc':
-                                        rssConfig.descriptionXPath = elementInfo.text;
-                                        break;
-                                    case 'link':
-                                        rssConfig.linkXPath = draggedElement.href || elementInfo.text;
-                                        break;
+                            while (current && current.tagName !== 'BODY' && current.tagName !== 'HTML') {
+                                if (current.className && typeof current.className === 'string' && current.className.trim() !== '') {
+                                    hierarchy.unshift(current.tagName.toLowerCase() + ': ' + current.className);
                                 }
-                                
-                                console.log('Updated config:', rssConfig);
+                                current = current.parentElement;
+                            }
+                            
+                            return hierarchy.length > 0 ? hierarchy.join('\\n→ ') : 'No classes found';
+                        }
+
+                        function handleDragStart(event) {
+                            const element = event.target;
+                            const classHierarchy = getClassHierarchy(element);
+                            event.dataTransfer.setData('text/plain', classHierarchy);
+                            return false;
+                        }
+
+                        document.addEventListener('mouseover', function(e) {
+                            if (e.target.className && typeof e.target.className === 'string' && e.target.className.trim() !== '') {
+                                e.target.draggable = true;
+                                e.target.addEventListener('dragstart', handleDragStart);
                             }
                         });
-                    });
-
-                    // Add helper tooltip
-                    const tooltip = document.createElement('div');
-                    tooltip.style.cssText = `
-                        position: fixed;
-                        bottom: 20px;
-                        right: 20px;
-                        background: rgba(13, 110, 253, 0.9);
-                        color: white;
-                        padding: 15px;
-                        border-radius: 8px;
-                        font-size: 14px;
-                        z-index: 1000;
-                        pointer-events: none;
                     `;
-                    tooltip.textContent = '✨ Click and drag elements to the left panel';
-                    iframeDoc.body.appendChild(tooltip);
+                    iframeDoc.body.appendChild(script);
 
-                    setTimeout(() => {
-                        tooltip.style.opacity = '0';
-                        tooltip.style.transition = 'opacity 0.5s ease';
-                    }, 5000);
-
-                } catch (error) {
-                    console.error('Error setting up drag and drop:', error);
-                }
-            });
-
-            // Add Preview RSS button functionality
-            const previewButton = document.getElementById('preview-rss');
-            const previewContent = document.querySelector('#rss-preview .preview-content pre');
-
-            previewButton.addEventListener('click', function() {
-                // Check if we have the required elements
-                if (!rssConfig.titleXPath || !rssConfig.descriptionXPath || !rssConfig.linkXPath) {
-                    alert('Please assign all required elements (Title, Description, and Link) before previewing');
-                    return;
-                }
-
-                // Get the current URL from the iframe
-                const iframe = document.getElementById('content-frame');
-                const currentUrl = new URL(iframe.src).searchParams.get('url');
-
-                // Send the configuration to the server
-                fetch('/preview-rss', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        url: currentUrl,
-                        config: {
-                            title: rssConfig.titleXPath,
-                            description: rssConfig.descriptionXPath,
-                            link: rssConfig.linkXPath
+                    const style = iframeDoc.createElement('style');
+                    style.textContent = `
+                        [draggable="true"] {
+                            cursor: grab !important;
+                            outline: 1px dashed #666 !important;
                         }
-                    })
-                })
-                .then(response => response.text())
-                .then(data => {
-                    // Update the preview area with the RSS feed
-                    previewContent.textContent = data;
-                    
-                    // Scroll the preview into view
-                    document.getElementById('rss-preview').scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                })
-                .catch(error => {
-                    console.error('Error generating RSS preview:', error);
-                    alert('Error generating RSS preview. Please check the console for details.');
-                });
-
-                // Show loading state
-                previewButton.disabled = true;
-                previewButton.textContent = 'Generating Preview...';
-                
-                // Reset button state after response
-                setTimeout(() => {
-                    previewButton.disabled = false;
-                    previewButton.textContent = 'Preview RSS';
-                }, 3000);
+                        [draggable="true"]:hover {
+                            outline: 2px solid #333 !important;
+                            background-color: rgba(0,0,0,0.05) !important;
+                        }
+                        [draggable="true"]:active {
+                            cursor: grabbing !important;
+                        }
+                    `;
+                    iframeDoc.head.appendChild(style);
+                } catch (error) {
+                    console.error('Cannot access iframe content:', error);
+                    loadingOverlay.style.display = 'none';
+                    submitButton.disabled = false;
+                }
             });
         });
-
-        // Helper function to get element info
-        function getElementInfo(element) {
-            const text = element.innerText.trim();
-            const parent = element.parentElement;
-            const parentClasses = parent ? parent.className : '';
-            const parentTag = parent ? parent.tagName.toLowerCase() : '';
-            const elementClasses = element.className;
-            const elementTag = element.tagName.toLowerCase();
-            
-            return {
-                text: text,
-                elementInfo: `<${elementTag}${elementClasses ? ' class="'+elementClasses+'"' : ''}>`,
-                parentInfo: `<${parentTag}${parentClasses ? ' class="'+parentClasses+'"' : ''}>`
-            };
-        }
-
-        // Initialize empty RSS config
-        let rssConfig = {
-            titleXPath: null,
-            descriptionXPath: null,
-            linkXPath: null
-        };
     </script>
 </body>
 </html>
