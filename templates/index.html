@@ -218,6 +218,9 @@
             const linkText = e.dataTransfer.getData('text/link-text');
             const similarPattern = e.dataTransfer.getData('text/similar-pattern');
             
+            // Clear the drop zone content first
+            dropZone.innerHTML = '';
+            
             // Create container for the dropped link and similar articles
             const container = document.createElement('div');
             container.className = 'article-group';
@@ -243,6 +246,7 @@
             const iframe = document.getElementById('webpage-content');
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             
+            let similarCount = 0;
             iframeDoc.querySelectorAll('a').forEach(a => {
                 if (a.getAttribute('data-similar-selector') === similarPattern && 
                     a.getAttribute('data-href') !== link) {
@@ -256,12 +260,13 @@
                         <div class="selector-text">${a.getAttribute('data-selector')}</div>
                     `;
                     similarArticles.appendChild(similarLink);
+                    similarCount++;
                 }
             });
             
-            // Clear "Drop links here" message if it's the first drop
-            if (dropZone.textContent.includes('Drop links here')) {
-                dropZone.innerHTML = '';
+            // Only show similar articles section if there are any
+            if (similarCount === 0) {
+                similarArticles.innerHTML = '<h4>No similar articles found</h4>';
             }
             
             dropZone.appendChild(container);
