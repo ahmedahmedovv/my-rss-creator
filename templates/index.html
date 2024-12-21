@@ -21,6 +21,7 @@
             flex-direction: column;
             gap: 16px;
             height: 100vh;
+            overflow-y: auto;
         }
         .right-panel {
             width: 70%;
@@ -50,15 +51,15 @@
         }
         .drop-zone {
             flex: 1;
-            border: 1px dashed #eaeaea;
-            border-radius: 6px;
-            padding: 20px;
-            transition: all 0.2s ease;
-            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 200px;
         }
         .drop-zone.dragover {
-            background: #f5f5f5;
-            border-color: #000;
+            background: #e3e8ec;
+            border-color: #2d3436;
+            box-shadow: 0 0 0 4px rgba(45, 52, 54, 0.1);
         }
         .drop-icon {
             font-size: 24px;
@@ -66,55 +67,83 @@
             margin-bottom: 10px;
         }
         .article-group {
-            background: #fff;
+            background: #ffffff;
             border: 1px solid #eaeaea;
-            border-radius: 6px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .main-article {
-            padding: 16px;
-            border-bottom: 1px solid #eaeaea;
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .similar-articles {
-            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
         .similar-articles h4 {
-            font-size: 12px;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #666;
-            margin: 0 0 12px 0;
+            color: #2d3436;
+            margin: 0 0 16px 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .similar-articles h4::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: #2d3436;
+            border-radius: 50%;
         }
         .similar-article {
-            padding: 12px;
+            padding: 16px;
             margin: 8px 0;
-            background: #fafafa;
-            border-radius: 4px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #eaeaea;
+            transition: all 0.2s ease;
         }
         .similar-article:hover {
-            background: #f1f3f5;
+            border-color: #2d3436;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         .link-title {
             font-size: 14px;
             font-weight: 500;
-            color: #000;
-            margin-bottom: 4px;
+            color: #2d3436;
+            margin-bottom: 6px;
         }
         .dropped-link a {
-            color: #666;
+            color: #495057;
             text-decoration: none;
-            font-size: 12px;
+            font-size: 13px;
             display: block;
             margin: 4px 0;
             word-break: break-all;
         }
+        .dropped-link a:hover {
+            color: #2d3436;
+        }
         .selector-text {
             font-family: monospace;
             font-size: 11px;
-            color: #999;
-            background: #f5f5f5;
-            padding: 6px;
+            color: #868e96;
+            background: #f8f9fa;
+            padding: 8px;
             border-radius: 4px;
-            margin-top: 6px;
+            margin-top: 8px;
+            border: 1px solid #e9ecef;
         }
         #webpage-content {
             width: 100%;
@@ -134,7 +163,7 @@
             width: 16px;
             height: 16px;
             margin: -8px 0 0 -8px;
-            border: 1px solid #000;
+            border: 2px solid #2d3436;
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -143,18 +172,118 @@
             to { transform: rotate(360deg); }
         }
         .drop-zone-empty {
-            height: 100%;
+            height: 200px;
+            border: 2px dashed #d0d0d0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #f8f9fa;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #666;
+            color: #2d3436;
         }
         .drop-zone-empty svg {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 8px;
-            color: #666;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 12px;
+            color: #2d3436;
+        }
+        .drop-zone-empty span {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .similar-articles {
+            background: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .similar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 16px;
+        }
+
+        .similar-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2d3436;
+            font-weight: 600;
+        }
+
+        .similar-count {
+            background: #f1f3f5;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .similar-content {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .similar-content.expanded {
+            display: block;
+        }
+
+        .chevron-icon {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .similar-header.expanded .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .no-similar {
+            color: #868e96;
+            font-size: 13px;
+            text-align: center;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .similar-content {
+            display: none;
+            margin-top: 12px;
+        }
+
+        .similar-content.expanded {
+            display: block;
+        }
+
+        .chevron-icon {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .similar-header.expanded .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .similar-header:hover {
+            opacity: 0.8;
+        }
+
+        .similar-header {
+            cursor: pointer;
+            padding: 4px 0;
         }
     </style>
 </head>
@@ -240,9 +369,6 @@
             e.preventDefault();
             dropZone.classList.remove('dragover');
             
-            // Show loading state
-            dropZone.classList.add('loading');
-            
             const link = e.dataTransfer.getData('text/plain');
             const selector = e.dataTransfer.getData('text/selector');
             const linkText = e.dataTransfer.getData('text/link-text');
@@ -251,58 +377,73 @@
             // Clear the drop zone content first
             dropZone.innerHTML = '';
             
-            // Create container for the dropped link and similar articles
-            const container = document.createElement('div');
-            container.className = 'article-group';
-            
-            // Add the main dropped link
-            const linkElement = document.createElement('div');
-            linkElement.className = 'dropped-link main-article';
-            linkElement.innerHTML = `
+            // Create main article box
+            const mainArticle = document.createElement('div');
+            mainArticle.className = 'main-article';
+            mainArticle.innerHTML = `
                 <div class="link-title">${linkText || 'Untitled Link'}</div>
                 <a href="${link}" target="_blank">${link}</a>
                 <div class="selector-text">${selector}</div>
             `;
             
-            container.appendChild(linkElement);
-            
-            // Add section for similar articles
+            // Create similar articles box
             const similarArticles = document.createElement('div');
             similarArticles.className = 'similar-articles';
-            similarArticles.innerHTML = '<h4>Similar Articles:</h4>';
-            container.appendChild(similarArticles);
             
             // Find similar articles in the iframe
             const iframe = document.getElementById('webpage-content');
             const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             
             let similarCount = 0;
+            const similarLinks = [];
+            
             iframeDoc.querySelectorAll('a').forEach(a => {
                 if (a.getAttribute('data-similar-selector') === similarPattern && 
                     a.getAttribute('data-href') !== link) {
-                    const similarLink = document.createElement('div');
-                    similarLink.className = 'dropped-link similar-article';
-                    similarLink.innerHTML = `
-                        <div class="link-title">${a.getAttribute('data-text') || 'Untitled Link'}</div>
-                        <a href="${a.getAttribute('data-href')}" target="_blank">
-                            ${a.getAttribute('data-href')}
-                        </a>
-                        <div class="selector-text">${a.getAttribute('data-selector')}</div>
-                    `;
-                    similarArticles.appendChild(similarLink);
                     similarCount++;
+                    similarLinks.push(`
+                        <div class="similar-article">
+                            <div class="link-title">${a.getAttribute('data-text') || 'Untitled Link'}</div>
+                            <a href="${a.getAttribute('data-href')}" target="_blank">
+                                ${a.getAttribute('data-href')}
+                            </a>
+                            <div class="selector-text">${a.getAttribute('data-selector')}</div>
+                        </div>
+                    `);
                 }
             });
             
-            // Only show similar articles section if there are any
-            if (similarCount === 0) {
-                similarArticles.innerHTML = '<h4>No similar articles found</h4>';
-            }
+            // Create similar articles header with count and dropdown
+            similarArticles.innerHTML = `
+                <div class="similar-header">
+                    <div class="similar-title">
+                        <span>Similar Articles</span>
+                        <span class="similar-count">${similarCount}</span>
+                    </div>
+                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+                <div class="similar-content">
+                    ${similarCount > 0 
+                        ? similarLinks.join('')
+                        : '<div class="no-similar">No similar articles found</div>'
+                    }
+                </div>
+            `;
             
-            dropZone.appendChild(container);
+            // Add click handler for dropdown
+            const header = similarArticles.querySelector('.similar-header');
+            const content = similarArticles.querySelector('.similar-content');
             
-            // Remove loading state when done
-            dropZone.classList.remove('loading');
+            header.addEventListener('click', () => {
+                header.classList.toggle('expanded');
+                content.classList.toggle('expanded');
+            });
+            
+            // Add both boxes to drop zone
+            dropZone.appendChild(mainArticle);
+            dropZone.appendChild(similarArticles);
         });
     </script>
 </body>
