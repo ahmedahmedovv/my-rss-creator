@@ -125,374 +125,556 @@
         .preview-content {
             max-height: 400px;
             overflow-y: auto;
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
         }
-        pre {
+        .preview-content pre {
             margin: 0;
+            white-space: pre-wrap;
             font-family: monospace;
             font-size: 14px;
+            line-height: 1.5;
+        }
+        /* Add new panel layout styles */
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100vh - 40px);
+        }
+        
+        .left-panel {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .right-panel {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 20px;
+            height: 100%;
+        }
+        
+        .content-panel {
+            height: 100%;
+            margin: 0;
+        }
+        
+        #rss-preview {
+            height: 300px;
+            margin: 0;
+            display: block;
+        }
+        
+        /* Update existing styles */
+        .preview-content {
+            max-height: 250px;
+        }
+        
+        /* Add to existing styles */
+        .assigned-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .assigned-item span {
+            display: block;
+        }
+        
+        .assigned-item small {
+            margin-top: 5px;
+            display: block;
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        /* Add to existing styles */
+        .assigned-item {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .assigned-item.drag-over {
+            background-color: #e9ecef;
+            border: 2px dashed #0d6efd;
+        }
+
+        /* Style for elements being dragged in iframe */
+        .being-dragged {
+            outline: 2px solid #0d6efd !important;
+            opacity: 0.7;
+        }
+
+        /* Visual cue for drop zones */
+        #title-path, #desc-path, #link-path {
+            position: relative;
+        }
+
+        #title-path::before, #desc-path::before, #link-path::before {
+            content: "Drop here";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .drag-over::before {
+            opacity: 1 !important;
+        }
+
+        /* Make the assigned items look more interactive */
+        .assigned-item {
+            position: relative;
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .assigned-item::after {
+            content: "Drop element here";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #6c757d;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .assigned-item.drag-over::after {
+            opacity: 1;
+        }
+
+        /* New instruction panel styles */
+        .instructions-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .instruction-steps {
+            margin-top: 15px;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .step ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        .step li {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        /* Updated dropzone styles */
+        .dropzone {
+            background: #ffffff;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .dropzone-label {
+            text-align: center;
+            color: #6c757d;
+        }
+
+        .dropzone-label h4 {
+            margin: 10px 0 5px;
+            color: #212529;
+        }
+
+        .dropzone-label p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+
+        .drag-icon {
+            font-size: 24px;
+        }
+
+        .dropzone.drag-over {
+            background: #e9ecef;
+            border-color: #0d6efd;
+            border-style: dashed;
+        }
+
+        /* Updated assigned item styles */
+        .assigned-item span {
+            display: block;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+
+        /* Preview button style */
+        .preview-button {
+            width: 100%;
+            padding: 12px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .preview-button:hover {
+            background: #0b5ed7;
+        }
+
+        /* Dragging styles */
+        .being-dragged {
+            outline: 2px solid #0d6efd !important;
+            outline-offset: 2px;
+            opacity: 0.7;
+        }
+
+        /* Hover effect for draggable elements in iframe */
+        #content-frame *:hover {
+            cursor: grab;
+        }
+
+        #content-frame *:active {
+            cursor: grabbing;
+        }
+
+        /* Loading state for preview button */
+        #preview-rss:disabled {
+            background-color: #6c757d;
+            cursor: wait;
         }
     </style>
 </head>
 <body>
-    <h1>RSS Feed Creator</h1>
-    
-    <div class="url-panel">
-        <form method="POST">
-            <input type="url" name="url" placeholder="Enter URL to create RSS feed" required>
-            <button type="submit">Load Page</button>
-        </form>
-        <div class="selection-buttons">
-            <button class="select-btn title-btn" id="select-title">Select Title</button>
-            <button class="select-btn desc-btn" id="select-desc">Select Description</button>
-            <button class="select-btn link-btn" id="select-link">Select Link</button>
-        </div>
-        <div id="xpath-display"></div>
-    </div>
+    <div class="main-container">
+        <div class="left-panel">
+            <h1>RSS Feed Creator</h1>
+            
+            <div class="url-panel">
+                <form method="POST">
+                    <input type="url" name="url" placeholder="Enter URL to create RSS feed" required>
+                    <button type="submit">Load Page</button>
+                </form>
+            </div>
 
-    <div id="rss-config">
-        <h3>RSS Configuration</h3>
-        <div id="assigned-paths">
-            <div class="assigned-item" id="title-path">Title XPath: <span>Not assigned</span></div>
-            <div class="assigned-item" id="desc-path">Description XPath: <span>Not assigned</span></div>
-            <div class="assigned-item" id="link-path">Link XPath: <span>Not assigned</span></div>
-        </div>
-        <button id="preview-rss" style="margin-top: 10px;">Preview RSS</button>
-    </div>
+            <div class="instructions-panel">
+                <h3>How to Create RSS Feed</h3>
+                <div class="instruction-steps">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <p>Enter the website URL above and click "Load Page"</p>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <p>From the loaded page, drag elements to the boxes below:</p>
+                        <ul>
+                            <li>Drag article titles to the "Title" box</li>
+                            <li>Drag article text to the "Description" box</li>
+                            <li>Drag article links to the "Link" box</li>
+                        </ul>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <p>Click "Preview RSS" to see your feed</p>
+                    </div>
+                </div>
+            </div>
 
-    <div id="rss-preview" style="display: none;">
-        <h3>RSS Preview</h3>
-        <div class="preview-content" style="background: #f8f9fa; padding: 15px; border: 1px solid #ddd; margin-top: 10px;">
-            <pre style="white-space: pre-wrap;"></pre>
+            <div id="rss-config">
+                <h3>Drop Elements Here</h3>
+                <div id="assigned-paths">
+                    <div class="assigned-item dropzone" id="title-path">
+                        <div class="dropzone-label">
+                            <i class="drag-icon">📥</i>
+                            <h4>Title</h4>
+                            <p>Drag article title here</p>
+                        </div>
+                        <span>Not assigned</span>
+                    </div>
+                    <div class="assigned-item dropzone" id="desc-path">
+                        <div class="dropzone-label">
+                            <i class="drag-icon">📥</i>
+                            <h4>Description</h4>
+                            <p>Drag article description here</p>
+                        </div>
+                        <span>Not assigned</span>
+                    </div>
+                    <div class="assigned-item dropzone" id="link-path">
+                        <div class="dropzone-label">
+                            <i class="drag-icon">📥</i>
+                            <h4>Link</h4>
+                            <p>Drag article link here</p>
+                        </div>
+                        <span>Not assigned</span>
+                    </div>
+                </div>
+                <button id="preview-rss" class="preview-button">Preview RSS</button>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            {% if content %}
+            <div class="content-panel">
+                <iframe id="content-frame" src="/proxy?url={{ url|urlencode }}" frameborder="0"></iframe>
+            </div>
+            {% endif %}
+
+            <div id="rss-preview">
+                <h3>RSS Preview</h3>
+                <div class="preview-content">
+                    <pre style="white-space: pre-wrap;"></pre>
+                </div>
+            </div>
         </div>
     </div>
-
-    {% if content %}
-    <div class="content-panel">
-        <iframe id="content-frame" src="/proxy?url={{ url|urlencode }}" frameborder="0"></iframe>
-    </div>
-    {% endif %}
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait for iframe to load
+            const iframe = document.getElementById('content-frame');
+            if (!iframe) return;
+
+            iframe.addEventListener('load', function() {
+                try {
+                    const iframeDoc = iframe.contentWindow.document;
+                    
+                    // Add styles to iframe
+                    const styleSheet = iframeDoc.createElement('style');
+                    styleSheet.textContent = `
+                        * { cursor: grab !important; }
+                        *.dragging { 
+                            outline: 2px solid #0d6efd !important;
+                            opacity: 0.7 !important;
+                        }
+                    `;
+                    iframeDoc.head.appendChild(styleSheet);
+
+                    // Make elements draggable
+                    iframeDoc.addEventListener('mousedown', function(e) {
+                        let element = e.target;
+                        
+                        // Make element draggable
+                        element.setAttribute('draggable', 'true');
+                        
+                        // Handle drag start
+                        element.addEventListener('dragstart', function(e) {
+                            console.log('Drag started');
+                            element.classList.add('dragging');
+                            window._draggedElement = element;
+                        }, { once: true });
+
+                        // Handle drag end
+                        element.addEventListener('dragend', function() {
+                            console.log('Drag ended');
+                            element.classList.remove('dragging');
+                            element.setAttribute('draggable', 'false');
+                        }, { once: true });
+                    });
+
+                    // Handle drop zones
+                    const dropZones = document.querySelectorAll('.dropzone');
+                    dropZones.forEach(zone => {
+                        zone.addEventListener('dragover', function(e) {
+                            e.preventDefault();
+                            this.classList.add('drag-over');
+                        });
+
+                        zone.addEventListener('dragleave', function() {
+                            this.classList.remove('drag-over');
+                        });
+
+                        zone.addEventListener('drop', function(e) {
+                            e.preventDefault();
+                            console.log('Drop event triggered');
+                            
+                            this.classList.remove('drag-over');
+                            const draggedElement = window._draggedElement;
+                            
+                            if (draggedElement) {
+                                const type = this.id.replace('-path', '');
+                                console.log('Dropping into:', type);
+                                
+                                // Get element info
+                                const elementInfo = getElementInfo(draggedElement);
+                                
+                                // Update display
+                                this.querySelector('span').innerHTML = `
+                                    <div>${elementInfo.text.substring(0, 50)}${elementInfo.text.length > 50 ? '...' : ''}</div>
+                                    <small style="color: #666; font-size: 0.8em;">
+                                        ${elementInfo.parentInfo} → ${elementInfo.elementInfo}
+                                    </small>
+                                `;
+                                
+                                // Store the selection
+                                switch(type) {
+                                    case 'title':
+                                        rssConfig.titleXPath = elementInfo.text;
+                                        break;
+                                    case 'desc':
+                                        rssConfig.descriptionXPath = elementInfo.text;
+                                        break;
+                                    case 'link':
+                                        rssConfig.linkXPath = draggedElement.href || elementInfo.text;
+                                        break;
+                                }
+                                
+                                console.log('Updated config:', rssConfig);
+                            }
+                        });
+                    });
+
+                    // Add helper tooltip
+                    const tooltip = document.createElement('div');
+                    tooltip.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: rgba(13, 110, 253, 0.9);
+                        color: white;
+                        padding: 15px;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        z-index: 1000;
+                        pointer-events: none;
+                    `;
+                    tooltip.textContent = '✨ Click and drag elements to the left panel';
+                    iframeDoc.body.appendChild(tooltip);
+
+                    setTimeout(() => {
+                        tooltip.style.opacity = '0';
+                        tooltip.style.transition = 'opacity 0.5s ease';
+                    }, 5000);
+
+                } catch (error) {
+                    console.error('Error setting up drag and drop:', error);
+                }
+            });
+
+            // Add Preview RSS button functionality
+            const previewButton = document.getElementById('preview-rss');
+            const previewContent = document.querySelector('#rss-preview .preview-content pre');
+
+            previewButton.addEventListener('click', function() {
+                // Check if we have the required elements
+                if (!rssConfig.titleXPath || !rssConfig.descriptionXPath || !rssConfig.linkXPath) {
+                    alert('Please assign all required elements (Title, Description, and Link) before previewing');
+                    return;
+                }
+
+                // Get the current URL from the iframe
+                const iframe = document.getElementById('content-frame');
+                const currentUrl = new URL(iframe.src).searchParams.get('url');
+
+                // Send the configuration to the server
+                fetch('/preview-rss', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        url: currentUrl,
+                        config: {
+                            title: rssConfig.titleXPath,
+                            description: rssConfig.descriptionXPath,
+                            link: rssConfig.linkXPath
+                        }
+                    })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Update the preview area with the RSS feed
+                    previewContent.textContent = data;
+                    
+                    // Scroll the preview into view
+                    document.getElementById('rss-preview').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                })
+                .catch(error => {
+                    console.error('Error generating RSS preview:', error);
+                    alert('Error generating RSS preview. Please check the console for details.');
+                });
+
+                // Show loading state
+                previewButton.disabled = true;
+                previewButton.textContent = 'Generating Preview...';
+                
+                // Reset button state after response
+                setTimeout(() => {
+                    previewButton.disabled = false;
+                    previewButton.textContent = 'Preview RSS';
+                }, 3000);
+            });
+        });
+
+        // Helper function to get element info
+        function getElementInfo(element) {
+            const text = element.innerText.trim();
+            const parent = element.parentElement;
+            const parentClasses = parent ? parent.className : '';
+            const parentTag = parent ? parent.tagName.toLowerCase() : '';
+            const elementClasses = element.className;
+            const elementTag = element.tagName.toLowerCase();
+            
+            return {
+                text: text,
+                elementInfo: `<${elementTag}${elementClasses ? ' class="'+elementClasses+'"' : ''}>`,
+                parentInfo: `<${parentTag}${parentClasses ? ' class="'+parentClasses+'"' : ''}>`
+            };
+        }
+
+        // Initialize empty RSS config
         let rssConfig = {
             titleXPath: null,
             descriptionXPath: null,
             linkXPath: null
         };
-
-        let currentSelection = null;
-
-        function logToServer(message, level = 'info') {
-            fetch('/log', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    message: message,
-                    level: level
-                })
-            }).catch(error => {
-                console.error('Logging failed:', error);
-            });
-        }
-
-        function getXPath(element) {
-            logToServer('Getting XPath for element: ' + element.tagName);
-            
-            // Log element details
-            logToServer('Element details - tagName: ' + element.tagName + 
-                       ', className: ' + element.className + 
-                       ', id: ' + element.id);
-
-            // Find the closest article container using multiple common class patterns
-            const articleContainer = element.closest([
-                '.category__list__item',
-                '.news-item',
-                '.article',
-                'article',
-                '.post',
-                '.entry',
-                '.item',
-                '[class*="news"]',
-                '[class*="article"]',
-                '[class*="post"]'
-            ].join(','));
-
-            if (!articleContainer) {
-                logToServer('No article container found', 'warning');
-                return null;
-            }
-
-            // Generate XPath based on the element's role
-            let xpath = '';
-            const tag = element.tagName.toLowerCase();
-            
-            // For title selection
-            if (currentSelection === 'title') {
-                if (tag === 'a' && element.closest('h1, h2, h3, h4')) {
-                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a';
-                } else if (tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4') {
-                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2';
-                }
-            }
-            // For description selection
-            else if (currentSelection === 'desc') {
-                if (tag === 'p' || (tag === 'a' && element.closest('p'))) {
-                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//p';
-                } else if (tag === 'div' && element.classList.contains('description')) {
-                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//*[contains(@class, "description")]';
-                }
-            }
-            // For link selection
-            else if (currentSelection === 'link') {
-                if (tag === 'a') {
-                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a';
-                }
-            }
-
-            logToServer('Generated XPath: ' + xpath);
-            return xpath;
-        }
-
-        // Add logging for button clicks
-        document.getElementById('select-title').addEventListener('click', function() {
-            logToServer('Title selection button clicked');
-            currentSelection = 'title';
-            updateSelectionButtons();
-            updateXPathDisplay();
-            xpathDisplay.textContent = 'Click an element to select as Title';
-            xpathDisplay.style.display = 'block';
-        });
-
-        document.getElementById('select-desc').addEventListener('click', function() {
-            logToServer('Description selection button clicked');
-            currentSelection = 'desc';
-            updateSelectionButtons();
-            updateXPathDisplay();
-            xpathDisplay.textContent = 'Click an element to select as Description';
-            xpathDisplay.style.display = 'block';
-        });
-
-        document.getElementById('select-link').addEventListener('click', function() {
-            logToServer('Link selection button clicked');
-            currentSelection = 'link';
-            updateSelectionButtons();
-            updateXPathDisplay();
-            xpathDisplay.textContent = 'Click an element to select as Link';
-            xpathDisplay.style.display = 'block';
-        });
-
-        function updateSelectionButtons() {
-            document.querySelectorAll('.select-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            if (currentSelection) {
-                document.querySelector(`#select-${currentSelection}`).classList.add('active');
-            }
-        }
-
-        function assignXPath(xpath) {
-            if (!currentSelection || !xpath) {
-                logToServer('Invalid assignment attempt - missing selection or xpath');
-                return;
-            }
-
-            logToServer(`Assigning XPath: ${xpath} for type: ${currentSelection}`);
-
-            // Update the display and configuration
-            switch(currentSelection) {
-                case 'title':
-                    rssConfig.titleXPath = xpath;
-                    document.querySelector('#title-path span').textContent = xpath;
-                    break;
-                case 'desc':
-                    rssConfig.descriptionXPath = xpath;
-                    document.querySelector('#desc-path span').textContent = xpath;
-                    break;
-                case 'link':
-                    rssConfig.linkXPath = xpath;
-                    document.querySelector('#link-path span').textContent = xpath;
-                    break;
-            }
-
-            // Log the current configuration
-            logToServer('Current RSS config: ' + JSON.stringify(rssConfig));
-
-            // Reset selection
-            currentSelection = null;
-            updateSelectionButtons();
-            xpathDisplay.textContent = 'Select an element type using the buttons above';
-        }
-
-        // Add function to update display from config
-        function updateXPathDisplay() {
-            document.querySelector('#title-path span').textContent = 
-                rssConfig.titleXPath || 'Not assigned';
-            document.querySelector('#desc-path span').textContent = 
-                rssConfig.descriptionXPath || 'Not assigned';
-            document.querySelector('#link-path span').textContent = 
-                rssConfig.linkXPath || 'Not assigned';
-        }
-
-        const iframe = document.getElementById('content-frame');
-        const xpathDisplay = document.getElementById('xpath-display');
-        let lastHighlighted = null;
-        let lastClicked = null;
-
-        // Add logging for iframe initialization
-        if (iframe) {
-            logToServer('Initializing iframe event handlers');
-            iframe.onload = function() {
-                try {
-                    const iframeDoc = iframe.contentWindow.document;
-                    logToServer('Iframe document loaded');
-                    
-                    // Add click handler with more detailed logging
-                    iframeDoc.addEventListener('click', function(e) {
-                        logToServer('Click event triggered');
-                        e.preventDefault();
-                        e.stopPropagation();
-                        
-                        if (!currentSelection) {
-                            logToServer('No selection type active');
-                            return;
-                        }
-
-                        logToServer('Current selection type: ' + currentSelection);
-                        logToServer('Element clicked: ' + e.target.tagName);
-
-                        const xpath = getXPath(e.target);
-                        if (xpath) {
-                            logToServer('Generated XPath: ' + xpath);
-                            assignXPath(xpath);
-                        } else {
-                            logToServer('Failed to generate XPath', 'warning');
-                        }
-                    }, true);
-
-                    // Add hover handler
-                    iframeDoc.addEventListener('mouseover', function(e) {
-                        if (currentSelection) {
-                            e.target.classList.add('hover-highlight');
-                        }
-                    }, true);
-
-                    // Add mouse out handler
-                    iframeDoc.addEventListener('mouseout', function(e) {
-                        e.target.classList.remove('hover-highlight');
-                    }, true);
-
-                    logToServer('All event handlers attached successfully');
-                } catch (e) {
-                    logToServer('Error initializing iframe: ' + e.message, 'error');
-                }
-            };
-        } else {
-            logToServer('Iframe element not found', 'error');
-        }
-
-        document.getElementById('preview-rss').addEventListener('click', async function() {
-            const previewDiv = document.getElementById('rss-preview');
-            const previewContent = previewDiv.querySelector('pre');
-            
-            try {
-                const iframeDoc = iframe.contentWindow.document;
-                
-                // Find all article containers using multiple selectors
-                const articles = iframeDoc.querySelectorAll([
-                    '.category__list__item',
-                    '.news-item',
-                    '.article',
-                    'article',
-                    '.post',
-                    '.entry',
-                    '.item',
-                    '[class*="news"]',
-                    '[class*="article"]',
-                    '[class*="post"]'
-                ].join(','));
-                
-                logToServer(`Found ${articles.length} articles`);
-                
-                let rssPreview = '<?xml version="1.0" encoding="UTF-8"?>\n';
-                rssPreview += '<rss version="2.0">\n';
-                rssPreview += '  <channel>\n';
-                rssPreview += '    <title>RSS Feed Preview</title>\n';
-                rssPreview += '    <description>Preview of selected elements</description>\n';
-                rssPreview += '    <link>' + window.location.href + '</link>\n';
-
-                articles.forEach((article, index) => {
-                    try {
-                        let titleEl, descEl, linkEl;
-                        
-                        // Try multiple selectors for title
-                        titleEl = article.querySelector('h2 a') || 
-                                 article.querySelector('h1 a') ||
-                                 article.querySelector('h3 a') ||
-                                 article.querySelector('.title a') ||
-                                 article.querySelector('[class*="title"] a');
-
-                        // Try multiple selectors for description
-                        descEl = article.querySelector('p') ||
-                                article.querySelector('.description') ||
-                                article.querySelector('[class*="desc"]') ||
-                                article.querySelector('[class*="summary"]');
-
-                        // Try multiple selectors for link
-                        linkEl = article.querySelector('h2 a') ||
-                                article.querySelector('h1 a') ||
-                                article.querySelector('.title a') ||
-                                article.querySelector('a');
-
-                        if (titleEl) {
-                            const title = titleEl.textContent.trim();
-                            const description = descEl ? descEl.textContent.trim() : '';
-                            const link = linkEl ? linkEl.href : '';
-
-                            if (title) {
-                                rssPreview += '    <item>\n';
-                                rssPreview += `      <title>${escapeXml(title)}</title>\n`;
-                                rssPreview += `      <description>${escapeXml(description)}</description>\n`;
-                                rssPreview += `      <link>${escapeXml(link)}</link>\n`;
-                                rssPreview += '    </item>\n';
-                                
-                                logToServer(`Added article ${index + 1}: ${title}`);
-                            }
-                        }
-                    } catch (err) {
-                        logToServer(`Error processing article ${index + 1}: ${err.message}`, 'error');
-                    }
-                });
-
-                rssPreview += '  </channel>\n';
-                rssPreview += '</rss>';
-
-                // Show preview
-                previewContent.textContent = rssPreview;
-                previewDiv.style.display = 'block';
-                
-                logToServer('RSS preview generated successfully');
-
-            } catch (e) {
-                logToServer('Error generating preview: ' + e.message, 'error');
-                previewContent.textContent = 'Error generating preview: ' + e.message;
-                previewDiv.style.display = 'block';
-            }
-        });
-
-        // Helper function to escape XML special characters
-        function escapeXml(unsafe) {
-            return unsafe
-                .replace(/[<>&'"]/g, function (c) {
-                    switch (c) {
-                        case '<': return '&lt;';
-                        case '>': return '&gt;';
-                        case '&': return '&amp;';
-                        case '\'': return '&apos;';
-                        case '"': return '&quot;';
-                    }
-                });
-        }
     </script>
 </body>
 </html>

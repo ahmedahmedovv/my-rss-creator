@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import re
 import logging
 from datetime import datetime
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
 
 app = Flask(__name__)
 
@@ -77,6 +79,59 @@ def log_message():
         logging.info(message)
         
     return jsonify({'status': 'success'})
+
+@app.route('/preview-rss', methods=['POST'])
+def preview_rss():
+    try:
+        data = request.get_json()
+        url = data['url']
+        config = data['config']
+        
+        # Fetch the page content
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # Create RSS feed
+        rss = ET.Element('rss', version='2.0')
+        channel = ET.SubElement(rss, 'channel')
+        
+        # Add channel information
+        ET.SubElement(channel, 'title').text = 'RSS Feed for ' + url
+        ET.SubElement(channel, 'link').text = url
+        ET.SubElement(channel, 'description').text = 'Generated RSS feed'
+        ET.SubElement(channel, 'lastBuildDate').text = datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z')
+        
+        # Find all items using the title as the base selector
+        titles = soup.find_all(text=lambda text: text and config['title'] in text)
+        
+        for title_element in titles[:5]:  # Limit to 5 items for preview
+            item = ET.SubElement(channel, 'item')
+            
+            # Find closest parent that contains all required elements
+            parent = title_element.parent
+            while parent and parent.name != 'body':
+                # Try to find description and link within this parent
+                desc = parent.find(text=lambda text: text and config['description'] in text)
+                link = parent.find('a', href=True) if config['link'] else None
+                
+                if desc and (link or not config['link']):
+                    ET.SubElement(item, 'title').text = title_element.strip()
+                    ET.SubElement(item, 'description').text = desc.strip()
+                    if link:
+                        ET.SubElement(item, 'link').text = link['href']
+                    ET.SubElement(item, 'pubDate').text = datetime.now().strftime('%a, %d %b %Y %H:%M:%S %z')
+                    break
+                    
+                parent = parent.parent
+        
+        # Convert to string with proper formatting
+        xml_str = minidom.parseString(ET.tostring(rss)).toprettyxml(indent="   ")
+        
+        return xml_str, 200, {'Content-Type': 'text/xml'}
+        
+    except Exception as e:
+        logging.error(f"Error generating RSS preview: {str(e)}")
+        return str(e), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
