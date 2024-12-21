@@ -1,0 +1,392 @@
+2024-12-21 21:43:32,397 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:32] "POST / HTTP/1.1" 200 -
+2024-12-21 21:43:32,650 - INFO - Initializing iframe event handlers
+2024-12-21 21:43:32,661 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:32,671 - DEBUG - Starting new HTTPS connection (1): www.trthaber.com:443
+2024-12-21 21:43:33,470 - DEBUG - https://www.trthaber.com:443 "GET /son-dakika-haberleri HTTP/11" 200 None
+2024-12-21 21:43:33,813 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:33] "GET /proxy?url=https://www.trthaber.com/son-dakika-haberleri HTTP/1.1" 200 -
+2024-12-21 21:43:34,326 - INFO - Title selection button clicked
+2024-12-21 21:43:34,327 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:34] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:37,543 - INFO - All event handlers attached successfully
+2024-12-21 21:43:37,544 - INFO - Iframe document loaded
+2024-12-21 21:43:37,544 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:37] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:37,544 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:37] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:41,944 - INFO - Description selection button clicked
+2024-12-21 21:43:41,945 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:41] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,953 - INFO - Click event triggered
+2024-12-21 21:43:43,953 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,953 - INFO - Current selection type: desc
+2024-12-21 21:43:43,954 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,956 - INFO - Element clicked: A
+2024-12-21 21:43:43,957 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,958 - INFO - Getting XPath for element: A
+2024-12-21 21:43:43,959 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,959 - INFO - Element details - tagName: A, className: site-url hover-highlight hover, id: 
+2024-12-21 21:43:43,960 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,961 - INFO - Generated XPath: 
+2024-12-21 21:43:43,962 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:43,964 - WARNING - Failed to generate XPath
+2024-12-21 21:43:43,964 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:43] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:46,210 - INFO - Link selection button clicked
+2024-12-21 21:43:46,211 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:46] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,062 - INFO - Click event triggered
+2024-12-21 21:43:48,063 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,063 - INFO - Current selection type: link
+2024-12-21 21:43:48,064 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,067 - INFO - Element clicked: A
+2024-12-21 21:43:48,068 - INFO - Getting XPath for element: A
+2024-12-21 21:43:48,068 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,070 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,070 - INFO - Element details - tagName: A, className: site-url hover-highlight hover, id: 
+2024-12-21 21:43:48,072 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,073 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:43:48,074 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,077 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:43:48,077 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,079 - INFO - Assigning XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a for type: link
+2024-12-21 21:43:48,079 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:48,081 - INFO - Current RSS config: {"titleXPath":null,"descriptionXPath":null,"linkXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//h2//a"}
+2024-12-21 21:43:48,082 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:48] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:49,915 - INFO - Title selection button clicked
+2024-12-21 21:43:49,916 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:49] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,173 - INFO - Click event triggered
+2024-12-21 21:43:52,173 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,174 - INFO - Current selection type: title
+2024-12-21 21:43:52,175 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,177 - INFO - Element clicked: A
+2024-12-21 21:43:52,178 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,178 - INFO - Getting XPath for element: A
+2024-12-21 21:43:52,180 - INFO - Element details - tagName: A, className: site-url hover-highlight hover, id: 
+2024-12-21 21:43:52,180 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,181 - INFO - Generated XPath: 
+2024-12-21 21:43:52,181 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,182 - WARNING - Failed to generate XPath
+2024-12-21 21:43:52,182 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:52,183 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:52] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,319 - INFO - Found 47 articles
+2024-12-21 21:43:54,320 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,324 - INFO - Added article 1: Almanya'da Noel pazarına araçla yapılan saldırıda ölü sayısı 5'e yükseldi
+2024-12-21 21:43:54,325 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,326 - INFO - Added article 3: Almanya'da Noel pazarına araçla yapılan saldırıda ölü sayısı 5'e yükseldi
+2024-12-21 21:43:54,328 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,331 - INFO - Added article 4: SON DAKİKA GÜNDEM HABERLERİ
+2024-12-21 21:43:54,333 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,341 - INFO - Added article 5: Saldırı hazırlığındaki 2 terörist etkisiz hale getirildi
+2024-12-21 21:43:54,345 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,347 - INFO - Added article 6: SON DAKİKA TÜRKİYE HABERLERİ
+2024-12-21 21:43:54,348 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,350 - INFO - Added article 7: 14 yaşındaki çocuğun kullandığı otomobilin çarptığı aracın sürücüsü öldü
+2024-12-21 21:43:54,353 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,355 - INFO - Added article 8: SON DAKİKA DÜNYA HABERLERİ
+2024-12-21 21:43:54,355 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,359 - INFO - Added article 9: Suriye'nin yeni dışişleri bakanı Türkiye mezunu Esaad Hasan Eş-Şiybani
+2024-12-21 21:43:54,360 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,361 - INFO - Added article 10: SON DAKİKA EKONOMİ HABERLERİ
+2024-12-21 21:43:54,363 - INFO - Added article 11: Hazine ve Maliye Bakanlığı yeni yılda dijital uygulamalara hız verecek
+2024-12-21 21:43:54,363 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,364 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,365 - INFO - Added article 12: SON DAKİKA YAŞAM HABERLERİ
+2024-12-21 21:43:54,366 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,368 - INFO - Added article 13: Diyanet: Bir peygamberin doğumu, onun getirdiği değerlere aykırı olarak kutlanamaz
+2024-12-21 21:43:54,369 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,371 - INFO - Added article 14: SON DAKİKA KÜLTÜR-SANAT HABERLERİ
+2024-12-21 21:43:54,372 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,374 - INFO - Added article 15: Bir Vatan Şairi: Mehmet Akif Ersoy TRT radyolarında canlanıyor
+2024-12-21 21:43:54,375 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,379 - INFO - Added article 16: SON DAKİKA SAĞLIK HABERLERİ
+2024-12-21 21:43:54,379 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,380 - INFO - Added article 17: Hastanelerde "her gebe için bir ebe" dönemi başladı
+2024-12-21 21:43:54,383 - INFO - Added article 18: SON DAKİKA BİLİM TEKNOLOJİ HABERLERİ
+2024-12-21 21:43:54,383 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,384 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,385 - INFO - Added article 19: Tapuda yapay zeka dönemi
+2024-12-21 21:43:54,387 - INFO - Added article 20: SON DAKİKA EĞİTİM HABERLERİ
+2024-12-21 21:43:54,388 - INFO - Added article 21: "Aday Öğretmenlik ve Öğretmenlik Mesleği Kariyer Basamakları Yönetmeliği" yürürlüğe girdi
+2024-12-21 21:43:54,389 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,390 - INFO - Added article 22: SON DAKİKA İNFOGRAFİK HABERLERİ
+2024-12-21 21:43:54,390 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,390 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,391 - INFO - Added article 23: Körfez turunda 3 ülkeyle işbirlikleri güçlendirildi
+2024-12-21 21:43:54,391 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,393 - INFO - Added article 24: SON DAKİKA İNTERAKTİF HABERLERİ
+2024-12-21 21:43:54,395 - INFO - Added article 25: Türkiye'nin gölleri kuruyor: Uydu görüntüleriyle 40 yıllık değişim
+2024-12-21 21:43:54,395 - INFO - Added article 26: SON HABERLER
+2024-12-21 21:43:54,396 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,397 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,399 - INFO - Added article 27: SON HABERLER
+2024-12-21 21:43:54,399 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,399 - INFO - RSS preview generated successfully
+2024-12-21 21:43:54,400 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,400 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:43:54,403 - INFO - 127.0.0.1 - - [21/Dec/2024 21:43:54] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:05,337 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:05] "POST / HTTP/1.1" 200 -
+2024-12-21 21:46:05,533 - INFO - Initializing iframe event handlers
+2024-12-21 21:46:05,534 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:05] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:05,537 - DEBUG - Starting new HTTPS connection (1): www.hurriyet.com.tr:443
+2024-12-21 21:46:06,711 - DEBUG - https://www.hurriyet.com.tr:443 "GET /son-dakika-haberleri/ HTTP/11" 200 None
+2024-12-21 21:46:07,123 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:07] "GET /proxy?url=https://www.hurriyet.com.tr/son-dakika-haberleri/ HTTP/1.1" 200 -
+2024-12-21 21:46:10,608 - INFO - Title selection button clicked
+2024-12-21 21:46:10,608 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:10] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:10,653 - INFO - Iframe document loaded
+2024-12-21 21:46:10,654 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:10] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:10,656 - INFO - All event handlers attached successfully
+2024-12-21 21:46:10,659 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:10] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,350 - INFO - Click event triggered
+2024-12-21 21:46:12,350 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,351 - INFO - Current selection type: title
+2024-12-21 21:46:12,351 - INFO - Element clicked: A
+2024-12-21 21:46:12,352 - INFO - Getting XPath for element: A
+2024-12-21 21:46:12,353 - INFO - Element details - tagName: A, className: hover-highlight, id: 
+2024-12-21 21:46:12,354 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,355 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,355 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:46:12,355 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,356 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,357 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:46:12,358 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,360 - INFO - Assigning XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a for type: title
+2024-12-21 21:46:12,362 - INFO - Current RSS config: {"titleXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//h2//a","descriptionXPath":null,"linkXPath":null}
+2024-12-21 21:46:12,362 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,363 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:12,364 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:14,855 - INFO - Description selection button clicked
+2024-12-21 21:46:14,855 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:14] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,691 - INFO - Click event triggered
+2024-12-21 21:46:16,692 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,692 - INFO - Current selection type: desc
+2024-12-21 21:46:16,695 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,696 - INFO - Element clicked: A
+2024-12-21 21:46:16,696 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,698 - INFO - Getting XPath for element: A
+2024-12-21 21:46:16,699 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,700 - INFO - Element details - tagName: A, className: hover-highlight, id: 
+2024-12-21 21:46:16,701 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,703 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//p
+2024-12-21 21:46:16,703 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,705 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//p
+2024-12-21 21:46:16,705 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,707 - INFO - Assigning XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//p for type: desc
+2024-12-21 21:46:16,707 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:16,709 - INFO - Current RSS config: {"titleXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//h2//a","descriptionXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//p","linkXPath":null}
+2024-12-21 21:46:16,709 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:18,348 - INFO - Link selection button clicked
+2024-12-21 21:46:18,349 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:18] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,018 - INFO - Click event triggered
+2024-12-21 21:46:20,018 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,020 - INFO - Current selection type: link
+2024-12-21 21:46:20,020 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,022 - INFO - Element clicked: A
+2024-12-21 21:46:20,022 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,026 - INFO - Getting XPath for element: A
+2024-12-21 21:46:20,026 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,028 - INFO - Element details - tagName: A, className: hover-highlight, id: 
+2024-12-21 21:46:20,028 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,030 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:46:20,030 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,032 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:46:20,032 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,034 - INFO - Assigning XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a for type: link
+2024-12-21 21:46:20,034 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:20,036 - INFO - Current RSS config: {"titleXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//h2//a","descriptionXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//p","linkXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//h2//a"}
+2024-12-21 21:46:20,036 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,155 - INFO - Found 41 articles
+2024-12-21 21:46:32,156 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,158 - INFO - Added article 2: Arnavutluk, TikTok’u en az 1 yıl yasaklama kararı aldı
+2024-12-21 21:46:32,160 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,164 - INFO - Added article 3: Bakan Tunç'tan 'yeni Anayasa' açıklaması
+2024-12-21 21:46:32,168 - INFO - Added article 4: Son dakika... Avcılar'da 3 büyüklüğünde deprem
+2024-12-21 21:46:32,171 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,172 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,173 - INFO - Added article 5: Manavgat'ta şiddetli yağışta mahsur kalan 236 kişi tahliye edildi
+2024-12-21 21:46:32,175 - INFO - Added article 6: Ayrıldığı nişanlısını öldüren astsubay intihar etti
+2024-12-21 21:46:32,176 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,177 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,178 - INFO - Added article 8: ABD Başkanı Biden geçici bütçe tasarısını imzaladı
+2024-12-21 21:46:32,178 - INFO - Added article 7: Özgür Özel: Suriye'de acilen demokratik rejimin inşası elzemdir
+2024-12-21 21:46:32,179 - INFO - Added article 9: Suriye'nin yeni Dışişleri Bakanı Esaad Hasan Şeybani oldu... Yüksek lisans ve doktora eğitimleri Türkiye'den
+2024-12-21 21:46:32,181 - INFO - Added article 10: Rejimin zalim infazcıları: Sonları Esad'dan farksız oldu... 'Kaçarken gördüğüm anda düştüğünü anladım'
+2024-12-21 21:46:32,182 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,183 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,184 - INFO - Added article 11: Parlamento karıştı: Ortalık savaş alanına döndü
+2024-12-21 21:46:32,185 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,185 - INFO - Added article 12: Cumhurbaşkanı Erdoğan'dan Almanya'ya taziye mesajı
+2024-12-21 21:46:32,186 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,186 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,188 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,192 - INFO - Added article 13: Dışişleri Bakanı Hakan Fidan: YPG/PKK bizim ne istediğimizi gayet iyi biliyor
+2024-12-21 21:46:32,193 - INFO - Added article 14: Milliyet Executive ile İhracatın Yeni Yıldızları
+2024-12-21 21:46:32,194 - INFO - Added article 15: Roberto Righi: Türkiye’ye güveniyor ve yatırım yapıyoruz
+2024-12-21 21:46:32,195 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,196 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,196 - INFO - Added article 16: Yasa dışı bahis ve suç gelirlerinin aklanmasına karşı mücadele... Bakan Şimşek: Tümüyle engellemeye kararlıyız
+2024-12-21 21:46:32,197 - INFO - Added article 17: Türkiye Petrolleri Anonim Ortaklığına Edirne'de bir saha için petrol arama ruhsatı verildi
+2024-12-21 21:46:32,197 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,197 - INFO - Added article 18: Trafikte 'Xenon far' terörü
+2024-12-21 21:46:32,198 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,199 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,201 - INFO - Added article 19: Bakan Uraloğlu: Lacivert yol, büyük bir fırsat sunmaktadır
+2024-12-21 21:46:32,202 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,204 - INFO - Added article 20: Galatasaray, Darüşşafaka Lassa'yı devirdi
+2024-12-21 21:46:32,206 - INFO - Added article 21: Arsenal, Crystal Palace'a gol yağdırdı! Osayi-Samuel sürprizi...
+2024-12-21 21:46:32,206 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,207 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,208 - INFO - Added article 22: Beşiktaş teknik sorumlusu Halim Okta: Oyuncuları motive etmek zor
+2024-12-21 21:46:32,208 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,209 - INFO - Added article 23: Beşiktaşlı yıldızdan itiraf: Çok fazla sorun var
+2024-12-21 21:46:32,212 - INFO - Added article 24: Beşiktaş'ın belalısı Sami Uğurlu! Kasımpaşa'da tarihe geçmişti, Alanyaspor'da 32 yıl sonra ilki başardı
+2024-12-21 21:46:32,212 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,213 - INFO - Added article 25: Pendik'te puanlar paylaşıldı
+2024-12-21 21:46:32,213 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,215 - INFO - Added article 26: Efsane filmin oyuncusu sinemadan elini eteğini çekti... Kirli gömleği, elinde küreği... Artık mandalina yetiştiriyor
+2024-12-21 21:46:32,215 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,215 - INFO - Added article 27: MasterChef Esra Tokelli kimdir, kaç yaşında, şimdi ne yapıyor? Masterchef Esra hangi yıl yarıştı, kaçıncı oldu?
+2024-12-21 21:46:32,216 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,217 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,219 - INFO - Added article 28: CAN BORCU KONUSU, OYUNCULARI VE KARAKTERLERİ 📺|| Atv Can Borcu dizisi konusu nedir, oyuncuları kimler? Can Borcu nerede çekiliyor?
+2024-12-21 21:46:32,220 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,221 - INFO - Added article 29: TV YAYIN AKIŞI 21 ARALIK 2024 (YENİ DİZİ) || Hafta sonu tv'de neler var? Kanal D, ATV, TRT 1, Star TV, Show TV, TV8, NOW TV yayın akışı ve tv rehberi
+2024-12-21 21:46:32,223 - INFO - Added article 30: İki elti Kraliçe'ye karşı gelmiş... Biri düğününde beyaz gelinlik giydi... Diğeri 'nikâhım yok' diye davetini geri çevirdi
+2024-12-21 21:46:32,224 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,225 - INFO - Added article 31: Şakir Paşa'nın Aniese'si Denise Capezza kimdir, nereli, kaç yaşında? Denise Capezza kariyeri ve biyografisi
+2024-12-21 21:46:32,226 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,227 - INFO - Added article 32: SAYISAL LOTO SONUÇLARI AÇIKLANDI! 21 ARALIK 2024 ÇEKİLİŞİ || MPİ Çılgın Sayısal Loto sonuçları açıklandı! İşte dün akşamın sonucu
+2024-12-21 21:46:32,227 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,228 - INFO - Added article 33: Noel nedir, ne zaman kutlanır? Noel 24 Aralık mı, 6 Ocak'ta mı kutlanıyor? İşte merak edilen soruların cevabı
+2024-12-21 21:46:32,228 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,230 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,231 - INFO - Added article 34: Beşiktaş 1-1 Alanyaspor (Maç özeti)
+2024-12-21 21:46:32,232 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,234 - INFO - Added article 35: İSTANBUL'DA DA HİSSEDİLEN DEPREM || AFAD ve Kandilli son depremler listesi 21 Aralık: Son deprem enrede ne zaman kaç büyüklüğünde oldu?
+2024-12-21 21:46:32,235 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,236 - INFO - Added article 36: 15 TATİL (YARI YIL / SÖMESTR TATİLİ 2025) TARİHLERİ - MEB TAKVİMİ | Okullar ne zaman kapanacak, karne tatiline kaç gün kaldı, yarıyıl tatili ne zaman? İşte ara tatil ve karne tatili tarihleri!
+2024-12-21 21:46:32,237 - INFO - Added article 37: Yılbaşında okullar tatil mi? Yılbaşında öğrenciler kaç gün tatil yapacak?
+2024-12-21 21:46:32,238 - INFO - Added article 38: MasterChef Esra Tokelli kimdir, kaç yaşında, şimdi ne yapıyor? Masterchef Esra hangi yıl yarıştı, kaçıncı oldu?
+2024-12-21 21:46:32,239 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,241 - INFO - Added article 39: AÖL SORULARI VE CEVAP ANAHTARI 2024 YAYINLANDI MI? MEB Açık Lise AÖL soru ve cevapları ne zaman açıklanacak?
+2024-12-21 21:46:32,241 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,242 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,242 - INFO - Added article 40: YENİ HAFTANIN KATALOĞU YAYIMLANDI! 🔴🛒BİM AKTÜEL 24-27 ARALIK 2024 || Bim'de gelecek hafta ürünleri neler? Yılbaşı Özel Mutfak ürünleri bim aktüelde!
+2024-12-21 21:46:32,243 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,243 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,246 - INFO - Added article 41: Günün Maç Programı 21 Aralık 2024 (Süper Lig, 1. Lig, Premier Lig)|| Bugün hangi maçlar var? Bugün kimin maçı var, saat kaçta?
+2024-12-21 21:46:32,247 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,248 - INFO - RSS preview generated successfully
+2024-12-21 21:46:32,249 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:46:32,251 - INFO - 127.0.0.1 - - [21/Dec/2024 21:46:32] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:06,682 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:06] "POST / HTTP/1.1" 200 -
+2024-12-21 21:47:06,869 - INFO - Initializing iframe event handlers
+2024-12-21 21:47:06,869 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:06] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:06,904 - DEBUG - Starting new HTTPS connection (1): www.trthaber.com:443
+2024-12-21 21:47:07,691 - DEBUG - https://www.trthaber.com:443 "GET /son-dakika-haberleri HTTP/11" 200 None
+2024-12-21 21:47:08,218 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:08] "GET /proxy?url=https://www.trthaber.com/son-dakika-haberleri HTTP/1.1" 200 -
+2024-12-21 21:47:10,786 - INFO - Title selection button clicked
+2024-12-21 21:47:10,786 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:10] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:11,010 - INFO - Iframe document loaded
+2024-12-21 21:47:11,011 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:11] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:11,012 - INFO - All event handlers attached successfully
+2024-12-21 21:47:11,013 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:11] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,912 - INFO - Click event triggered
+2024-12-21 21:47:12,912 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,912 - INFO - Current selection type: title
+2024-12-21 21:47:12,913 - INFO - Element clicked: A
+2024-12-21 21:47:12,914 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,915 - INFO - Getting XPath for element: A
+2024-12-21 21:47:12,916 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,917 - INFO - Element details - tagName: A, className: site-url hover-highlight hover, id: 
+2024-12-21 21:47:12,919 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,920 - INFO - Generated XPath: 
+2024-12-21 21:47:12,921 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,922 - WARNING - Failed to generate XPath
+2024-12-21 21:47:12,923 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:12,925 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:12] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:14,812 - INFO - Description selection button clicked
+2024-12-21 21:47:14,813 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:14] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,478 - INFO - Click event triggered
+2024-12-21 21:47:16,478 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,479 - INFO - Current selection type: desc
+2024-12-21 21:47:16,479 - INFO - Element clicked: A
+2024-12-21 21:47:16,481 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,482 - INFO - Getting XPath for element: A
+2024-12-21 21:47:16,483 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,484 - INFO - Element details - tagName: A, className: site-url hover-highlight hover, id: 
+2024-12-21 21:47:16,485 - INFO - Generated XPath: 
+2024-12-21 21:47:16,486 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,486 - WARNING - Failed to generate XPath
+2024-12-21 21:47:16,487 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,488 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:16,488 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:16] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:18,145 - INFO - Link selection button clicked
+2024-12-21 21:47:18,145 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:18] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,030 - INFO - Click event triggered
+2024-12-21 21:47:20,031 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,032 - INFO - Current selection type: link
+2024-12-21 21:47:20,032 - INFO - Element clicked: A
+2024-12-21 21:47:20,033 - INFO - Getting XPath for element: A
+2024-12-21 21:47:20,035 - INFO - Element details - tagName: A, className: site-url hover-highlight hover, id: 
+2024-12-21 21:47:20,035 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:47:20,035 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,036 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,036 - INFO - Generated XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a
+2024-12-21 21:47:20,037 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,037 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,037 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,038 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,040 - INFO - Assigning XPath: //*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a for type: link
+2024-12-21 21:47:20,042 - INFO - Current RSS config: {"titleXPath":null,"descriptionXPath":null,"linkXPath":"//*[contains(@class, \"news\") or contains(@class, \"article\") or contains(@class, \"post\")]//h2//a"}
+2024-12-21 21:47:20,045 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:20,046 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:20] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,966 - INFO - Found 47 articles
+2024-12-21 21:47:21,967 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,979 - INFO - Added article 1: Almanya'da Noel pazarına araçla yapılan saldırıda ölü sayısı 5'e yükseldi
+2024-12-21 21:47:21,981 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,986 - INFO - Added article 4: SON DAKİKA GÜNDEM HABERLERİ
+2024-12-21 21:47:21,987 - INFO - Added article 3: Almanya'da Noel pazarına araçla yapılan saldırıda ölü sayısı 5'e yükseldi
+2024-12-21 21:47:21,987 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,988 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,989 - INFO - Added article 5: Saldırı hazırlığındaki 2 terörist etkisiz hale getirildi
+2024-12-21 21:47:21,991 - INFO - Added article 6: SON DAKİKA TÜRKİYE HABERLERİ
+2024-12-21 21:47:21,992 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,992 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,994 - INFO - Added article 7: 14 yaşındaki çocuğun kullandığı otomobilin çarptığı aracın sürücüsü öldü
+2024-12-21 21:47:21,995 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:21,999 - INFO - Added article 8: SON DAKİKA DÜNYA HABERLERİ
+2024-12-21 21:47:21,999 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:21] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,003 - INFO - Added article 9: Suriye'nin yeni dışişleri bakanı Türkiye mezunu Esaad Hasan Eş-Şiybani
+2024-12-21 21:47:22,003 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,006 - INFO - Added article 10: SON DAKİKA EKONOMİ HABERLERİ
+2024-12-21 21:47:22,007 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,007 - INFO - Added article 11: Hazine ve Maliye Bakanlığı yeni yılda dijital uygulamalara hız verecek
+2024-12-21 21:47:22,009 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,011 - INFO - Added article 12: SON DAKİKA YAŞAM HABERLERİ
+2024-12-21 21:47:22,011 - INFO - Added article 13: Diyanet: Bir peygamberin doğumu, onun getirdiği değerlere aykırı olarak kutlanamaz
+2024-12-21 21:47:22,012 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,012 - INFO - Added article 14: SON DAKİKA KÜLTÜR-SANAT HABERLERİ
+2024-12-21 21:47:22,013 - INFO - Added article 15: Bir Vatan Şairi: Mehmet Akif Ersoy TRT radyolarında canlanıyor
+2024-12-21 21:47:22,013 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,014 - INFO - Added article 17: Hastanelerde "her gebe için bir ebe" dönemi başladı
+2024-12-21 21:47:22,015 - INFO - Added article 16: SON DAKİKA SAĞLIK HABERLERİ
+2024-12-21 21:47:22,015 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,015 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,017 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,018 - INFO - Added article 18: SON DAKİKA BİLİM TEKNOLOJİ HABERLERİ
+2024-12-21 21:47:22,018 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,019 - INFO - Added article 19: Tapuda yapay zeka dönemi
+2024-12-21 21:47:22,021 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,024 - INFO - Added article 20: SON DAKİKA EĞİTİM HABERLERİ
+2024-12-21 21:47:22,025 - INFO - Added article 21: "Aday Öğretmenlik ve Öğretmenlik Mesleği Kariyer Basamakları Yönetmeliği" yürürlüğe girdi
+2024-12-21 21:47:22,025 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,026 - INFO - Added article 22: SON DAKİKA İNFOGRAFİK HABERLERİ
+2024-12-21 21:47:22,027 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,028 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,028 - INFO - Added article 23: Körfez turunda 3 ülkeyle işbirlikleri güçlendirildi
+2024-12-21 21:47:22,030 - INFO - Added article 24: SON DAKİKA İNTERAKTİF HABERLERİ
+2024-12-21 21:47:22,030 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,031 - INFO - Added article 25: Türkiye'nin gölleri kuruyor: Uydu görüntüleriyle 40 yıllık değişim
+2024-12-21 21:47:22,032 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,034 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,035 - INFO - Added article 27: SON HABERLER
+2024-12-21 21:47:22,036 - INFO - Added article 26: SON HABERLER
+2024-12-21 21:47:22,036 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,037 - INFO - RSS preview generated successfully
+2024-12-21 21:47:22,038 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,039 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -
+2024-12-21 21:47:22,040 - INFO - 127.0.0.1 - - [21/Dec/2024 21:47:22] "POST /log HTTP/1.1" 200 -

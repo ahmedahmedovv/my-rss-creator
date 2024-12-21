@@ -1,9 +1,18 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, jsonify
 import requests
 from bs4 import BeautifulSoup
 import re
+import logging
+from datetime import datetime
 
 app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(
+    filename='rss_creator.log',
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 @app.route('/', methods=['GET', 'POST'])
 def hello_world():
@@ -53,6 +62,21 @@ def proxy():
         return Response(content, headers=headers)
     except Exception as e:
         return str(e), 500
+
+@app.route('/log', methods=['POST'])
+def log_message():
+    data = request.get_json()
+    message = data.get('message', '')
+    level = data.get('level', 'info')
+    
+    if level == 'error':
+        logging.error(message)
+    elif level == 'warning':
+        logging.warning(message)
+    else:
+        logging.info(message)
+        
+    return jsonify({'status': 'success'})
 
 if __name__ == '__main__':
     app.run(debug=True)

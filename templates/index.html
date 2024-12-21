@@ -116,6 +116,21 @@
             background-color: #9C27B0;
             color: white;
         }
+        #rss-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        .preview-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        pre {
+            margin: 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -141,7 +156,14 @@
             <div class="assigned-item" id="desc-path">Description XPath: <span>Not assigned</span></div>
             <div class="assigned-item" id="link-path">Link XPath: <span>Not assigned</span></div>
         </div>
-        <button id="generate-rss" style="margin-top: 10px;">Generate RSS Feed</button>
+        <button id="preview-rss" style="margin-top: 10px;">Preview RSS</button>
+    </div>
+
+    <div id="rss-preview" style="display: none;">
+        <h3>RSS Preview</h3>
+        <div class="preview-content" style="background: #f8f9fa; padding: 15px; border: 1px solid #ddd; margin-top: 10px;">
+            <pre style="white-space: pre-wrap;"></pre>
+        </div>
     </div>
 
     {% if content %}
@@ -159,38 +181,105 @@
 
         let currentSelection = null;
 
-        function getXPath(element) {
-            if (element.id !== '')
-                return 'id("' + element.id + '")';
-            if (element === document.body)
-                return element.tagName.toLowerCase();
-
-            let path = getXPath(element.parentNode) + '/' + element.tagName.toLowerCase();
-            
-            if (element.className && typeof element.className === 'string' && element.className.trim() !== '') {
-                path += '[@class="' + element.className.trim() + '"]';
-            }
-            
-            return path;
+        function logToServer(message, level = 'info') {
+            fetch('/log', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: message,
+                    level: level
+                })
+            }).catch(error => {
+                console.error('Logging failed:', error);
+            });
         }
 
-        // Selection button handlers
+        function getXPath(element) {
+            logToServer('Getting XPath for element: ' + element.tagName);
+            
+            // Log element details
+            logToServer('Element details - tagName: ' + element.tagName + 
+                       ', className: ' + element.className + 
+                       ', id: ' + element.id);
+
+            // Find the closest article container using multiple common class patterns
+            const articleContainer = element.closest([
+                '.category__list__item',
+                '.news-item',
+                '.article',
+                'article',
+                '.post',
+                '.entry',
+                '.item',
+                '[class*="news"]',
+                '[class*="article"]',
+                '[class*="post"]'
+            ].join(','));
+
+            if (!articleContainer) {
+                logToServer('No article container found', 'warning');
+                return null;
+            }
+
+            // Generate XPath based on the element's role
+            let xpath = '';
+            const tag = element.tagName.toLowerCase();
+            
+            // For title selection
+            if (currentSelection === 'title') {
+                if (tag === 'a' && element.closest('h1, h2, h3, h4')) {
+                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a';
+                } else if (tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4') {
+                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2';
+                }
+            }
+            // For description selection
+            else if (currentSelection === 'desc') {
+                if (tag === 'p' || (tag === 'a' && element.closest('p'))) {
+                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//p';
+                } else if (tag === 'div' && element.classList.contains('description')) {
+                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//*[contains(@class, "description")]';
+                }
+            }
+            // For link selection
+            else if (currentSelection === 'link') {
+                if (tag === 'a') {
+                    xpath = '//*[contains(@class, "news") or contains(@class, "article") or contains(@class, "post")]//h2//a';
+                }
+            }
+
+            logToServer('Generated XPath: ' + xpath);
+            return xpath;
+        }
+
+        // Add logging for button clicks
         document.getElementById('select-title').addEventListener('click', function() {
+            logToServer('Title selection button clicked');
             currentSelection = 'title';
             updateSelectionButtons();
+            updateXPathDisplay();
             xpathDisplay.textContent = 'Click an element to select as Title';
+            xpathDisplay.style.display = 'block';
         });
 
         document.getElementById('select-desc').addEventListener('click', function() {
+            logToServer('Description selection button clicked');
             currentSelection = 'desc';
             updateSelectionButtons();
+            updateXPathDisplay();
             xpathDisplay.textContent = 'Click an element to select as Description';
+            xpathDisplay.style.display = 'block';
         });
 
         document.getElementById('select-link').addEventListener('click', function() {
+            logToServer('Link selection button clicked');
             currentSelection = 'link';
             updateSelectionButtons();
+            updateXPathDisplay();
             xpathDisplay.textContent = 'Click an element to select as Link';
+            xpathDisplay.style.display = 'block';
         });
 
         function updateSelectionButtons() {
@@ -203,27 +292,46 @@
         }
 
         function assignXPath(xpath) {
-            if (!currentSelection) return;
+            if (!currentSelection || !xpath) {
+                logToServer('Invalid assignment attempt - missing selection or xpath');
+                return;
+            }
 
-            const elementId = `${currentSelection}-path`;
-            document.querySelector(`#${elementId} span`).textContent = xpath;
-            
+            logToServer(`Assigning XPath: ${xpath} for type: ${currentSelection}`);
+
+            // Update the display and configuration
             switch(currentSelection) {
                 case 'title':
                     rssConfig.titleXPath = xpath;
+                    document.querySelector('#title-path span').textContent = xpath;
                     break;
                 case 'desc':
                     rssConfig.descriptionXPath = xpath;
+                    document.querySelector('#desc-path span').textContent = xpath;
                     break;
                 case 'link':
                     rssConfig.linkXPath = xpath;
+                    document.querySelector('#link-path span').textContent = xpath;
                     break;
             }
 
-            // Reset selection after assigning
+            // Log the current configuration
+            logToServer('Current RSS config: ' + JSON.stringify(rssConfig));
+
+            // Reset selection
             currentSelection = null;
             updateSelectionButtons();
             xpathDisplay.textContent = 'Select an element type using the buttons above';
+        }
+
+        // Add function to update display from config
+        function updateXPathDisplay() {
+            document.querySelector('#title-path span').textContent = 
+                rssConfig.titleXPath || 'Not assigned';
+            document.querySelector('#desc-path span').textContent = 
+                rssConfig.descriptionXPath || 'Not assigned';
+            document.querySelector('#link-path span').textContent = 
+                rssConfig.linkXPath || 'Not assigned';
         }
 
         const iframe = document.getElementById('content-frame');
@@ -231,76 +339,160 @@
         let lastHighlighted = null;
         let lastClicked = null;
 
+        // Add logging for iframe initialization
         if (iframe) {
+            logToServer('Initializing iframe event handlers');
             iframe.onload = function() {
                 try {
                     const iframeDoc = iframe.contentWindow.document;
+                    logToServer('Iframe document loaded');
                     
-                    // Add click handler
+                    // Add click handler with more detailed logging
                     iframeDoc.addEventListener('click', function(e) {
+                        logToServer('Click event triggered');
                         e.preventDefault();
                         e.stopPropagation();
                         
                         if (!currentSelection) {
-                            xpathDisplay.textContent = 'Please select an element type first (Title, Description, or Link)';
+                            logToServer('No selection type active');
                             return;
                         }
 
-                        if (lastClicked) {
-                            lastClicked.classList.remove('click-highlight');
-                        }
-                        
-                        e.target.classList.remove('hover-highlight');
-                        e.target.classList.add('click-highlight');
-                        lastClicked = e.target;
-                        
+                        logToServer('Current selection type: ' + currentSelection);
+                        logToServer('Element clicked: ' + e.target.tagName);
+
                         const xpath = getXPath(e.target);
-                        assignXPath(xpath);
+                        if (xpath) {
+                            logToServer('Generated XPath: ' + xpath);
+                            assignXPath(xpath);
+                        } else {
+                            logToServer('Failed to generate XPath', 'warning');
+                        }
                     }, true);
 
                     // Add hover handler
                     iframeDoc.addEventListener('mouseover', function(e) {
-                        if (!currentSelection) return;
-
-                        if (lastHighlighted && lastHighlighted !== lastClicked) {
-                            lastHighlighted.classList.remove('hover-highlight');
-                        }
-                        
-                        if (e.target !== lastClicked) {
+                        if (currentSelection) {
                             e.target.classList.add('hover-highlight');
-                            lastHighlighted = e.target;
-                            
-                            const xpath = getXPath(e.target);
-                            xpathDisplay.textContent = `Click to assign as ${currentSelection}: ${xpath}`;
                         }
                     }, true);
 
-                    // Add mouseout handler
+                    // Add mouse out handler
                     iframeDoc.addEventListener('mouseout', function(e) {
-                        if (lastHighlighted && lastHighlighted !== lastClicked) {
-                            lastHighlighted.classList.remove('hover-highlight');
-                        }
+                        e.target.classList.remove('hover-highlight');
                     }, true);
 
-                    // Add styles
-                    const style = iframeDoc.createElement('style');
-                    style.textContent = `
-                        * { pointer-events: auto !important; }
-                        .hover-highlight { outline: 2px solid red !important; }
-                        .click-highlight { outline: 2px solid blue !important; }
-                    `;
-                    iframeDoc.head.appendChild(style);
-                    
+                    logToServer('All event handlers attached successfully');
                 } catch (e) {
-                    xpathDisplay.textContent = 'Cannot access iframe content due to same-origin policy';
-                    xpathDisplay.style.display = 'block';
+                    logToServer('Error initializing iframe: ' + e.message, 'error');
                 }
             };
+        } else {
+            logToServer('Iframe element not found', 'error');
         }
 
-        document.getElementById('generate-rss').addEventListener('click', function() {
-            console.log('RSS Configuration:', rssConfig);
+        document.getElementById('preview-rss').addEventListener('click', async function() {
+            const previewDiv = document.getElementById('rss-preview');
+            const previewContent = previewDiv.querySelector('pre');
+            
+            try {
+                const iframeDoc = iframe.contentWindow.document;
+                
+                // Find all article containers using multiple selectors
+                const articles = iframeDoc.querySelectorAll([
+                    '.category__list__item',
+                    '.news-item',
+                    '.article',
+                    'article',
+                    '.post',
+                    '.entry',
+                    '.item',
+                    '[class*="news"]',
+                    '[class*="article"]',
+                    '[class*="post"]'
+                ].join(','));
+                
+                logToServer(`Found ${articles.length} articles`);
+                
+                let rssPreview = '<?xml version="1.0" encoding="UTF-8"?>\n';
+                rssPreview += '<rss version="2.0">\n';
+                rssPreview += '  <channel>\n';
+                rssPreview += '    <title>RSS Feed Preview</title>\n';
+                rssPreview += '    <description>Preview of selected elements</description>\n';
+                rssPreview += '    <link>' + window.location.href + '</link>\n';
+
+                articles.forEach((article, index) => {
+                    try {
+                        let titleEl, descEl, linkEl;
+                        
+                        // Try multiple selectors for title
+                        titleEl = article.querySelector('h2 a') || 
+                                 article.querySelector('h1 a') ||
+                                 article.querySelector('h3 a') ||
+                                 article.querySelector('.title a') ||
+                                 article.querySelector('[class*="title"] a');
+
+                        // Try multiple selectors for description
+                        descEl = article.querySelector('p') ||
+                                article.querySelector('.description') ||
+                                article.querySelector('[class*="desc"]') ||
+                                article.querySelector('[class*="summary"]');
+
+                        // Try multiple selectors for link
+                        linkEl = article.querySelector('h2 a') ||
+                                article.querySelector('h1 a') ||
+                                article.querySelector('.title a') ||
+                                article.querySelector('a');
+
+                        if (titleEl) {
+                            const title = titleEl.textContent.trim();
+                            const description = descEl ? descEl.textContent.trim() : '';
+                            const link = linkEl ? linkEl.href : '';
+
+                            if (title) {
+                                rssPreview += '    <item>\n';
+                                rssPreview += `      <title>${escapeXml(title)}</title>\n`;
+                                rssPreview += `      <description>${escapeXml(description)}</description>\n`;
+                                rssPreview += `      <link>${escapeXml(link)}</link>\n`;
+                                rssPreview += '    </item>\n';
+                                
+                                logToServer(`Added article ${index + 1}: ${title}`);
+                            }
+                        }
+                    } catch (err) {
+                        logToServer(`Error processing article ${index + 1}: ${err.message}`, 'error');
+                    }
+                });
+
+                rssPreview += '  </channel>\n';
+                rssPreview += '</rss>';
+
+                // Show preview
+                previewContent.textContent = rssPreview;
+                previewDiv.style.display = 'block';
+                
+                logToServer('RSS preview generated successfully');
+
+            } catch (e) {
+                logToServer('Error generating preview: ' + e.message, 'error');
+                previewContent.textContent = 'Error generating preview: ' + e.message;
+                previewDiv.style.display = 'block';
+            }
         });
+
+        // Helper function to escape XML special characters
+        function escapeXml(unsafe) {
+            return unsafe
+                .replace(/[<>&'"]/g, function (c) {
+                    switch (c) {
+                        case '<': return '&lt;';
+                        case '>': return '&gt;';
+                        case '&': return '&amp;';
+                        case '\'': return '&apos;';
+                        case '"': return '&quot;';
+                    }
+                });
+        }
     </script>
 </body>
 </html>
