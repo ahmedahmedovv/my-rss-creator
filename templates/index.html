@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>RSS Feed Creator</title>
     <style>
         .url-panel {
             margin: 20px 0;
@@ -13,29 +13,294 @@
             padding: 10px;
             border: 1px solid #ccc;
             width: 100%;
-            height: 600px;  /* Fixed height for iframe */
+            height: 600px;
         }
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
+        #xpath-display, #xpath-history {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+        }
+        #xpath-display {
+            display: none;
+        }
+        #rss-config {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+        }
+        .xpath-item {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+        }
+        .title-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .desc-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        .link-btn {
+            background-color: #9C27B0;
+            color: white;
+        }
+        .assigned {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .hover-highlight {
+            outline: 2px solid red !important;
+        }
+        .click-highlight {
+            outline: 2px solid blue !important;
+        }
+        #rss-preview {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        .assigned-item {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+        }
+        .selection-buttons {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        .select-btn {
+            padding: 8px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+        }
+        .select-btn.active {
+            outline: 2px solid #000;
+        }
+        .title-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .desc-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+        .link-btn {
+            background-color: #9C27B0;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <h1>{{ message }}</h1>
+    <h1>RSS Feed Creator</h1>
     
     <div class="url-panel">
         <form method="POST">
-            <input type="url" name="url" placeholder="Enter URL" required>
-            <button type="submit">Fetch</button>
+            <input type="url" name="url" placeholder="Enter URL to create RSS feed" required>
+            <button type="submit">Load Page</button>
         </form>
+        <div class="selection-buttons">
+            <button class="select-btn title-btn" id="select-title">Select Title</button>
+            <button class="select-btn desc-btn" id="select-desc">Select Description</button>
+            <button class="select-btn link-btn" id="select-link">Select Link</button>
+        </div>
+        <div id="xpath-display"></div>
+    </div>
+
+    <div id="rss-config">
+        <h3>RSS Configuration</h3>
+        <div id="assigned-paths">
+            <div class="assigned-item" id="title-path">Title XPath: <span>Not assigned</span></div>
+            <div class="assigned-item" id="desc-path">Description XPath: <span>Not assigned</span></div>
+            <div class="assigned-item" id="link-path">Link XPath: <span>Not assigned</span></div>
+        </div>
+        <button id="generate-rss" style="margin-top: 10px;">Generate RSS Feed</button>
     </div>
 
     {% if content %}
     <div class="content-panel">
-        <iframe src="{{ url }}" frameborder="0"></iframe>
+        <iframe id="content-frame" src="/proxy?url={{ url|urlencode }}" frameborder="0"></iframe>
     </div>
     {% endif %}
+
+    <script>
+        let rssConfig = {
+            titleXPath: null,
+            descriptionXPath: null,
+            linkXPath: null
+        };
+
+        let currentSelection = null;
+
+        function getXPath(element) {
+            if (element.id !== '')
+                return 'id("' + element.id + '")';
+            if (element === document.body)
+                return element.tagName.toLowerCase();
+
+            let path = getXPath(element.parentNode) + '/' + element.tagName.toLowerCase();
+            
+            if (element.className && typeof element.className === 'string' && element.className.trim() !== '') {
+                path += '[@class="' + element.className.trim() + '"]';
+            }
+            
+            return path;
+        }
+
+        // Selection button handlers
+        document.getElementById('select-title').addEventListener('click', function() {
+            currentSelection = 'title';
+            updateSelectionButtons();
+            xpathDisplay.textContent = 'Click an element to select as Title';
+        });
+
+        document.getElementById('select-desc').addEventListener('click', function() {
+            currentSelection = 'desc';
+            updateSelectionButtons();
+            xpathDisplay.textContent = 'Click an element to select as Description';
+        });
+
+        document.getElementById('select-link').addEventListener('click', function() {
+            currentSelection = 'link';
+            updateSelectionButtons();
+            xpathDisplay.textContent = 'Click an element to select as Link';
+        });
+
+        function updateSelectionButtons() {
+            document.querySelectorAll('.select-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if (currentSelection) {
+                document.querySelector(`#select-${currentSelection}`).classList.add('active');
+            }
+        }
+
+        function assignXPath(xpath) {
+            if (!currentSelection) return;
+
+            const elementId = `${currentSelection}-path`;
+            document.querySelector(`#${elementId} span`).textContent = xpath;
+            
+            switch(currentSelection) {
+                case 'title':
+                    rssConfig.titleXPath = xpath;
+                    break;
+                case 'desc':
+                    rssConfig.descriptionXPath = xpath;
+                    break;
+                case 'link':
+                    rssConfig.linkXPath = xpath;
+                    break;
+            }
+
+            // Reset selection after assigning
+            currentSelection = null;
+            updateSelectionButtons();
+            xpathDisplay.textContent = 'Select an element type using the buttons above';
+        }
+
+        const iframe = document.getElementById('content-frame');
+        const xpathDisplay = document.getElementById('xpath-display');
+        let lastHighlighted = null;
+        let lastClicked = null;
+
+        if (iframe) {
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentWindow.document;
+                    
+                    // Add click handler
+                    iframeDoc.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        if (!currentSelection) {
+                            xpathDisplay.textContent = 'Please select an element type first (Title, Description, or Link)';
+                            return;
+                        }
+
+                        if (lastClicked) {
+                            lastClicked.classList.remove('click-highlight');
+                        }
+                        
+                        e.target.classList.remove('hover-highlight');
+                        e.target.classList.add('click-highlight');
+                        lastClicked = e.target;
+                        
+                        const xpath = getXPath(e.target);
+                        assignXPath(xpath);
+                    }, true);
+
+                    // Add hover handler
+                    iframeDoc.addEventListener('mouseover', function(e) {
+                        if (!currentSelection) return;
+
+                        if (lastHighlighted && lastHighlighted !== lastClicked) {
+                            lastHighlighted.classList.remove('hover-highlight');
+                        }
+                        
+                        if (e.target !== lastClicked) {
+                            e.target.classList.add('hover-highlight');
+                            lastHighlighted = e.target;
+                            
+                            const xpath = getXPath(e.target);
+                            xpathDisplay.textContent = `Click to assign as ${currentSelection}: ${xpath}`;
+                        }
+                    }, true);
+
+                    // Add mouseout handler
+                    iframeDoc.addEventListener('mouseout', function(e) {
+                        if (lastHighlighted && lastHighlighted !== lastClicked) {
+                            lastHighlighted.classList.remove('hover-highlight');
+                        }
+                    }, true);
+
+                    // Add styles
+                    const style = iframeDoc.createElement('style');
+                    style.textContent = `
+                        * { pointer-events: auto !important; }
+                        .hover-highlight { outline: 2px solid red !important; }
+                        .click-highlight { outline: 2px solid blue !important; }
+                    `;
+                    iframeDoc.head.appendChild(style);
+                    
+                } catch (e) {
+                    xpathDisplay.textContent = 'Cannot access iframe content due to same-origin policy';
+                    xpathDisplay.style.display = 'block';
+                }
+            };
+        }
+
+        document.getElementById('generate-rss').addEventListener('click', function() {
+            console.log('RSS Configuration:', rssConfig);
+        });
+    </script>
 </body>
 </html>
