@@ -30,7 +30,7 @@ def fetch_page():
             a['class'] = a.get('class', []) + ['draggable-link']
             a['data-href'] = href  # Store the full URL
             a['data-selector'] = selector  # Store the CSS selector
-            # Add data attribute for similar articles detection
+            a['data-text'] = a.get_text().strip()  # Store the link text
             a['data-similar-selector'] = generate_article_pattern(a)
             
         # Add custom CSS and JS to the page
