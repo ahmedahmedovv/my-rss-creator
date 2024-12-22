@@ -4,8 +4,23 @@ from cssselect import GenericTranslator
 import feedgenerator
 import datetime
 import requests
+from supabase import create_client
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Initialize Supabase client with credentials from .env
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+
+if not supabase_url or not supabase_key:
+    raise ValueError("Missing required environment variables SUPABASE_URL and/or SUPABASE_KEY")
+
+supabase = create_client(supabase_url, supabase_key)
 
 # ---- Helper Functions ----
 
@@ -312,6 +327,29 @@ def fetch_selectors():
         selectors = analyze_page_structure(tree)
         
         return jsonify({'selectors': selectors})
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/save_feed', methods=['POST'])
+def save_feed():
+    try:
+        data = request.get_json()
+        url = data.get('url')
+        title_xpath = data.get('title_selector')
+        description_xpath = data.get('description_selector')
+        
+        if not all([url, title_xpath, description_xpath]):
+            return jsonify({'error': 'Missing required fields'}), 400
+            
+        # Insert into Supabase
+        result = supabase.table('rss_feeds').insert({
+            'url': url,
+            'title_xpath': title_xpath,
+            'description_xpath': description_xpath
+        }).execute()
+        
+        return jsonify({'message': 'Feed saved successfully', 'data': result.data})
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500

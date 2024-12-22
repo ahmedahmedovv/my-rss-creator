@@ -54,10 +54,16 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block" 
-                            style="font-size: 1.3rem; padding: 1rem; height: auto;">
-                        Generate RSS Feed
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary" 
+                                style="font-size: 1.3rem; padding: 1rem; height: auto;">
+                            Generate RSS Feed
+                        </button>
+                        <button type="button" onclick="saveFeed()" class="btn btn-outline" 
+                                style="font-size: 1.3rem; padding: 1rem; height: auto;">
+                            Save Feed
+                        </button>
+                    </div>
                 </form>
             </div>
 
@@ -80,10 +86,6 @@
             <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
                 <div class="Box-header">
                     <h2 class="Box-title text-center" style="font-size: 1.8rem;">Preview</h2>
-                    <button onclick="copyRssUrl()" class="btn btn-sm"
-                            style="font-size: 1.1rem; padding: 0.5rem 1rem;">
-                        Copy RSS URL
-                    </button>
                 </div>
                 <div id="result" class="Box-body" style="flex: 1; overflow-y: auto;">
                     <div id="feedPreview" class="Box p-3 color-bg-subtle">
@@ -363,6 +365,35 @@
             }
         `;
         document.head.appendChild(style);
+
+        async function saveFeed() {
+            const data = {
+                url: document.getElementById('url').value,
+                title_selector: document.getElementById('titleSelector').value,
+                description_selector: document.getElementById('descriptionSelector').value
+            };
+            
+            try {
+                const response = await fetch('/save_feed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
+                alert('Feed saved successfully!');
+                
+            } catch (error) {
+                alert('Error saving feed: ' + error.message);
+            }
+        }
     </script>
 </body>
 </html>
