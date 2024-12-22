@@ -54,12 +54,12 @@
                         </div>
                     </div>
 
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary" 
+                    <div class="d-flex" style="gap: 1rem;">
+                        <button type="submit" class="btn btn-primary flex-1" 
                                 style="font-size: 1.3rem; padding: 1rem; height: auto;">
                             Generate RSS Feed
                         </button>
-                        <button type="button" onclick="saveFeed()" class="btn btn-outline" 
+                        <button type="button" onclick="saveFeed()" class="btn btn-outline flex-1" 
                                 style="font-size: 1.3rem; padding: 1rem; height: auto;">
                             Save Feed
                         </button>
@@ -388,7 +388,7 @@
                     throw new Error(result.error);
                 }
                 
-                alert('Feed saved successfully!');
+                alert(`Feed saved successfully!\nRSS URL: ${result.rss_url}`);
                 
             } catch (error) {
                 alert('Error saving feed: ' + error.message);

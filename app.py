@@ -2,25 +2,29 @@ from flask import Flask, render_template, request, jsonify
 from lxml import html, etree
 from cssselect import GenericTranslator
 import feedgenerator
-import datetime
+from datetime import datetime
 import requests
 from supabase import create_client
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 app = Flask(__name__)
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Initialize Supabase client with credentials from .env
+# Initialize Supabase client with service role key
 supabase_url = os.getenv("SUPABASE_URL")
-supabase_key = os.getenv("SUPABASE_KEY")
+supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
 
 if not supabase_url or not supabase_key:
-    raise ValueError("Missing required environment variables SUPABASE_URL and/or SUPABASE_KEY")
+    raise ValueError("Missing required environment variables SUPABASE_URL and/or SUPABASE_SERVICE_KEY")
 
-supabase = create_client(supabase_url, supabase_key)
+supabase = create_client(
+    supabase_url,
+    supabase_key
+)
 
 # ---- Helper Functions ----
 
@@ -268,7 +272,7 @@ def create_rss_feed(url: str, title_xpath: str, description_xpath: str) -> str:
                 title=title or 'No title',
                 link=link or url,
                 description=description,
-                pubdate=datetime.datetime.now()
+                pubdate=datetime.now()
             )
             
         return feed.writeString('utf-8')
@@ -342,14 +346,49 @@ def save_feed():
         if not all([url, title_xpath, description_xpath]):
             return jsonify({'error': 'Missing required fields'}), 400
             
-        # Insert into Supabase
+        # Generate RSS content
+        rss_content = create_rss_feed(url, title_xpath, description_xpath)
+        
+        if rss_content.startswith('Error'):
+            return jsonify({'error': rss_content}), 400
+
+        # Create a unique filename using the domain and timestamp
+        domain = urlparse(url).netloc
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"{domain}_{timestamp}.xml"
+        
+        # Ensure the storage bucket exists
+        try:
+            supabase.storage.get_bucket('rss-feed-storage')
+        except:
+            supabase.storage.create_bucket('rss-feed-storage')
+        
+        # Convert string content to bytes
+        file_data = rss_content.encode('utf-8')
+        
+        # Upload the RSS content to Supabase Storage
+        storage_response = supabase.storage \
+            .from_('rss-feed-storage') \
+            .upload(filename, file_data)
+
+        # Get the public URL for the uploaded file
+        file_url = supabase.storage \
+            .from_('rss-feed-storage') \
+            .get_public_url(filename)
+            
+        # Save feed info to database with the storage URL
         result = supabase.table('rss_feeds').insert({
             'url': url,
             'title_xpath': title_xpath,
-            'description_xpath': description_xpath
+            'description_xpath': description_xpath,
+            'rss_file_url': file_url
         }).execute()
         
-        return jsonify({'message': 'Feed saved successfully', 'data': result.data})
+        return jsonify({
+            'message': 'Feed saved successfully',
+            'data': result.data,
+            'rss_url': file_url
+        })
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
