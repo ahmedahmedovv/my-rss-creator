@@ -122,20 +122,23 @@ def get_all_selectors(url):
             try:
                 xpath = translator.css_to_xpath(selector)
                 matching_elements = tree.xpath(xpath)
-                content_samples = []
                 
-                # Get content samples from first 3 matching elements
-                for el in matching_elements[:3]:
-                    text = ' '.join(el.text_content().split())[:100]  # First 100 chars
-                    if text:
-                        content_samples.append(text)
-                
-                selector_data.append({
-                    'css': selector,
-                    'xpath': xpath,
-                    'example': len(matching_elements),
-                    'samples': content_samples
-                })
+                # Only include selectors with 3 or more matches
+                if len(matching_elements) >= 3:
+                    content_samples = []
+                    
+                    # Get content samples from first 3 matching elements
+                    for el in matching_elements[:3]:
+                        text = ' '.join(el.text_content().split())[:100]  # First 100 chars
+                        if text:
+                            content_samples.append(text)
+                    
+                    selector_data.append({
+                        'css': selector,
+                        'xpath': xpath,
+                        'example': len(matching_elements),
+                        'samples': content_samples
+                    })
             except:
                 continue
                 
