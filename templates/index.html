@@ -11,6 +11,7 @@
             border: 1px solid #e2e8f0;
         }
     </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body class="bg-gray-100">
     <div class="container mx-auto px-4 py-8">
@@ -216,30 +217,66 @@
         }
 
         function generateXML(feedType, xpath, element, sourceUrl, date) {
-            const title = element.textContent.trim();
-            const link = element.href || sourceUrl;
+            // Find the link - either the element itself or nearest parent/child link
+            let linkElement = element.tagName.toLowerCase() === 'a' ? 
+                element : (element.closest('a') || element.querySelector('a'));
             
-            return `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+            // Get the original website URL from the input field
+            const originalUrl = new URL(document.getElementById('urlInput').value);
+            
+            // Get the href and process it
+            let link = '';
+            if (linkElement && linkElement.href) {
+                try {
+                    // Remove localhost part and replace with original domain
+                    let href = linkElement.href;
+                    if (href.includes('127.0.0.1:5000') || href.includes('localhost')) {
+                        const path = new URL(href).pathname;
+                        link = new URL(path, originalUrl.origin).href;
+                    } else {
+                        link = href;
+                    }
+                } catch (e) {
+                    console.error('Error processing URL:', e);
+                    link = originalUrl.href;
+                }
+            } else {
+                link = originalUrl.href;
+            }
+
+            const title = element.textContent.trim();
+            
+            return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="rss.xsl"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>${feedType}</title>
-        <link>${sourceUrl}</link>
-        <description>Feed generated using ${feedType}</description>
+        <title><![CDATA[${feedType}]]></title>
+        <link>${originalUrl.origin}</link>
+        <description><![CDATA[Feed generated using ${feedType}]]></description>
+        <language>pl</language>
         <lastBuildDate>${date}</lastBuildDate>
-        <xpath>${escapeXml(xpath)}</xpath>
+        <xpath><![CDATA[${xpath}]]></xpath>
         
         <item>
-            <title>${escapeXml(title)}</title>
-            <link>${escapeXml(link)}</link>
-            <description>${escapeXml(title)}</description>
+            <title><![CDATA[${title}]]></title>
+            <link>${encodeURI(link)}</link>
+            <description><![CDATA[${title}]]></description>
             <pubDate>${date}</pubDate>
-            <guid>${escapeXml(link)}</guid>
+            <guid>${encodeURI(link)}</guid>
         </item>
     </channel>
 </rss>`;
         }
 
         function escapeXml(unsafe) {
+            if (!unsafe) return '';
+            
+            // Use CDATA for text content with special characters
+            if (/[<>&'"]/.test(unsafe) || /[^\x20-\x7E]/.test(unsafe)) {
+                return `<![CDATA[${unsafe}]]>`;
+            }
+            
+            // For attributes and other content
             return unsafe
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
