@@ -75,9 +75,37 @@ def analyze_page_structure(tree) -> list[dict]:
     selectors = set()
     translator = GenericTranslator()
     selector_data = []
+    
+    # Tags to exclude
+    excluded_tags = {
+        'script', 'style', 'noscript', 'iframe', 'meta', 
+        'link', 'head', 'svg', 'path', 'source', 'img'
+    }
+
+    # Common navigation/UI text patterns to exclude
+    excluded_text_patterns = {
+        'show all', 'view all', 'load more', 'show more',
+        'next page', 'previous page', 'tümünü gör', 'daha fazla',
+        'next', 'prev', 'previous', 'read more', 'devamı',
+        'copyright', 'all rights reserved', 'menu', 'search',
+        'share', 'follow us', 'subscribe'
+    }
 
     # Find all elements
     for element in tree.xpath('//*'):
+        # Skip excluded tags
+        if element.tag in excluded_tags:
+            continue
+            
+        # Skip elements with no text content
+        text_content = element.text_content().strip().lower()
+        if not text_content:
+            continue
+
+        # Skip elements with common navigation/UI text
+        if text_content.lower() in excluded_text_patterns:
+            continue
+
         # Get element with classes
         if element.get('class'):
             for cls in element.get('class').split():
@@ -97,18 +125,34 @@ def analyze_page_structure(tree) -> list[dict]:
             xpath = translator.css_to_xpath(selector)
             matching_elements = tree.xpath(xpath)
             
-            if len(matching_elements) >= 3:
+            # Filter out elements with no meaningful content or navigation text
+            content_elements = []
+            seen_texts = set()  # To track duplicate content
+            
+            for el in matching_elements:
+                text = ' '.join(el.text_content().split()).strip()
+                text_lower = text.lower()
+                
+                if (text and 
+                    el.tag not in excluded_tags and 
+                    text_lower not in excluded_text_patterns and
+                    text not in seen_texts and
+                    len(text) > 5):  # Ignore very short text
+                    
+                    content_elements.append(el)
+                    seen_texts.add(text)
+            
+            if len(content_elements) >= 3:
                 content_samples = [
                     ' '.join(el.text_content().split())[:100]
-                    for el in matching_elements[:3]
-                    if el.text_content().strip()
+                    for el in content_elements[:3]
                 ]
                 
-                if content_samples:
+                if content_samples and len(set(content_samples)) >= 2:  # Ensure at least 2 unique samples
                     selector_data.append({
                         'css': selector,
                         'xpath': xpath,
-                        'example': len(matching_elements),
+                        'example': len(content_elements),
                         'samples': content_samples
                     })
         except:

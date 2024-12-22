@@ -7,94 +7,93 @@
     <link href="https://unpkg.com/@primer/css@^20.2.4/dist/primer.css" rel="stylesheet" />
 </head>
 <body class="color-bg-default">
-    <div class="container-lg p-responsive py-6">
-        <h1 class="h1 text-center color-fg-default mb-6">RSS Generator</h1>
+    <div class="container-fluid p-responsive py-6">
+        <h1 class="h1 text-center color-fg-default mb-6" style="font-size: 2.5rem;">RSS Generator</h1>
         
-        <!-- Main Form -->
-        <div class="Box color-shadow-large mx-auto" style="max-width: 800px;">
-            <form id="rssForm" class="Box-body">
-                <!-- Step 1: URL Input -->
-                <div class="form-group mb-4">
-                    <div class="form-group-header">
-                        <h2 class="h4 color-fg-default">1. Enter Website URL</h2>
-                    </div>
-                    <div class="form-group-body">
-                        <input type="url" id="url" required 
-                               class="form-control width-full"
-                               placeholder="https://example.com/blog">
-                        <p class="note">Enter the URL of the website you want to create an RSS feed for</p>
-                    </div>
+        <div class="d-flex" style="gap: 2rem;">
+            <!-- Left Panel: Input Form -->
+            <div class="Box color-shadow-large" style="flex: 1;">
+                <div class="Box-header">
+                    <h2 class="Box-title" style="font-size: 1.8rem;">Configuration</h2>
                 </div>
-
-                <!-- Step 2: Selector Configuration -->
-                <div class="form-group mb-4">
-                    <div class="form-group-header">
-                        <h2 class="h4 color-fg-default">2. Configure Selectors</h2>
-                    </div>
-                    <div class="form-group-body">
-                        <div class="mb-3">
-                            <label class="form-label">Title Selector (XPath)</label>
-                            <input type="text" id="titleSelector" required 
-                                   class="form-control"
-                                   placeholder="//article//h2">
+                <form id="rssForm" class="Box-body">
+                    <!-- Step 1: URL Input -->
+                    <div class="form-group mb-4">
+                        <div class="form-group-header">
+                            <h3 class="h4 color-fg-default" style="font-size: 1.5rem;">1. Enter Website URL</h3>
                         </div>
-                        <div>
-                            <label class="form-label">Description Selector (XPath)</label>
-                            <input type="text" id="descriptionSelector" required 
-                                   class="form-control"
-                                   placeholder="//article//p[1]">
+                        <div class="form-group-body">
+                            <input type="url" id="url" required 
+                                   class="form-control width-full"
+                                   style="font-size: 1.2rem; padding: 0.75rem;"
+                                   placeholder="https://example.com/blog">
+                            <p class="note" style="font-size: 1rem; margin-top: 0.5rem;">Enter the URL of the website you want to create an RSS feed for</p>
                         </div>
                     </div>
+
+                    <!-- Step 2: Selector Configuration -->
+                    <div class="form-group mb-4">
+                        <div class="form-group-header">
+                            <h3 class="h4 color-fg-default" style="font-size: 1.5rem;">2. Configure Selectors</h3>
+                        </div>
+                        <div class="form-group-body">
+                            <div class="mb-3">
+                                <label class="form-label" style="font-size: 1.2rem;">Title Selector (XPath)</label>
+                                <input type="text" id="titleSelector" required 
+                                       class="form-control"
+                                       style="font-size: 1.2rem; padding: 0.75rem;"
+                                       placeholder="//article//h2">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 1.2rem;">Description Selector (XPath)</label>
+                                <input type="text" id="descriptionSelector" required 
+                                       class="form-control"
+                                       style="font-size: 1.2rem; padding: 0.75rem;"
+                                       placeholder="//article//p[1]">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" 
+                            style="font-size: 1.3rem; padding: 1rem; height: auto;">
+                        Generate RSS Feed
+                    </button>
+                </form>
+            </div>
+
+            <!-- Middle Panel: XPath Selector List -->
+            <div class="Box color-shadow-large" style="flex: 1;">
+                <div class="Box-header">
+                    <h2 class="Box-title" style="font-size: 1.8rem;">Available Selectors</h2>
                 </div>
+                <div class="Box-body">
+                    <div id="selectorList" class="Box" style="max-height: 700px; overflow-y: auto;">
+                        <div class="blankslate">
+                            <h3 class="blankslate-heading">Enter a URL</h3>
+                            <p class="blankslate-text">Available selectors will appear here after you enter a URL.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary btn-block">
-                    Generate RSS Feed
-                </button>
-            </form>
-
-            <!-- Results Section -->
-            <div id="result" class="Box-body hidden border-top">
-                <div class="d-flex flex-justify-between flex-items-center mb-3">
-                    <h2 class="h4 color-fg-default">Generated RSS Feed</h2>
-                    <button onclick="copyRssUrl()" class="btn btn-sm">
+            <!-- Right Panel: Preview -->
+            <div class="Box color-shadow-large" style="flex: 1;">
+                <div class="Box-header">
+                    <h2 class="Box-title" style="font-size: 1.8rem;">Preview</h2>
+                    <button onclick="copyRssUrl()" class="btn btn-sm"
+                            style="font-size: 1.1rem; padding: 0.5rem 1rem;">
                         Copy RSS URL
                     </button>
                 </div>
-
-                <div class="mb-4">
-                    <h3 class="h5 color-fg-muted mb-2">Preview</h3>
-                    <div id="feedPreview" class="Box p-3 color-bg-subtle">
-                        <!-- Feed items will be displayed here -->
+                <div id="result" class="Box-body">
+                    <div id="feedPreview" class="Box p-3 color-bg-subtle" 
+                         style="min-height: 400px; max-height: 800px; overflow-y: auto; font-size: 1.1rem;">
+                        <div class="blankslate">
+                            <h3 class="blankslate-heading">No RSS Feed Generated Yet</h3>
+                            <p class="blankslate-text">Configure the selectors and click Generate RSS Feed to see the preview here.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Selector Helper Panel -->
-        <div id="selectorPanel" 
-             class="position-fixed right-0 top-0 height-full color-bg-default border-left color-border-muted overflow-y-auto p-3 translate-x-100" 
-             style="width: 320px;">
-            <div class="d-flex flex-justify-between flex-items-center mb-3">
-                <h3 class="h4 color-fg-default">Selector Helper</h3>
-                <button onclick="togglePanel()" class="btn-octicon">
-                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                        <path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <input type="text" id="selectorSearch" 
-                   class="form-control mb-2"
-                   placeholder="Search selectors...">
-
-            <div class="BtnGroup d-block mb-2">
-                <button onclick="filterSelectors('all')" class="BtnGroup-item btn btn-sm">All</button>
-                <button onclick="filterSelectors('id')" class="BtnGroup-item btn btn-sm">IDs</button>
-                <button onclick="filterSelectors('class')" class="BtnGroup-item btn btn-sm">Classes</button>
-            </div>
-
-            <div id="selectorList" class="Box">
-                <!-- Selectors will be populated here -->
             </div>
         </div>
     </div>
@@ -284,11 +283,14 @@
                         <code>${selector.xpath}</code>
                     </div>
                     
-                    <!-- Content samples now always visible -->
                     <div class="color-bg-subtle p-2 mb-2 rounded-2">
-                        ${selector.samples.map(sample => `
-                            <div class="f6 color-fg-muted mb-1">${sample}</div>
-                        `).join('')}
+                        <ul class="list-style-none" style="margin-bottom: 0;">
+                            ${selector.samples.map(sample => `
+                                <li class="f6 color-fg-muted mb-1">
+                                    <span class="text-bold mr-2">•</span>${sample}
+                                </li>
+                            `).join('')}
+                        </ul>
                     </div>
                     
                     <div class="d-flex flex-wrap gap-2">
@@ -311,28 +313,6 @@
                 input.dispatchEvent(new Event('input'));
             }
         }
-
-        function filterSelectors(type) {
-            let filtered = [...allSelectors];
-            
-            if (type === 'id') {
-                filtered = allSelectors.filter(s => s.css.includes('#'));
-            } else if (type === 'class') {
-                filtered = allSelectors.filter(s => s.css.includes('.'));
-            }
-            
-            displaySelectors(filtered);
-        }
-
-        // Add search functionality
-        document.getElementById('selectorSearch').addEventListener('input', (e) => {
-            const search = e.target.value.toLowerCase();
-            const filtered = allSelectors.filter(s => 
-                s.css.toLowerCase().includes(search) || 
-                s.xpath.toLowerCase().includes(search)
-            );
-            displaySelectors(filtered);
-        });
 
         // Update the URL input handler to fetch selectors
         document.getElementById('url').addEventListener('change', (e) => {
