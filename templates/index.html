@@ -12,19 +12,56 @@
         
         <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
             <form id="rssForm" class="space-y-4">
+                <!-- Feed Customization Section -->
+                <div class="border-b border-gray-200 pb-4 mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Feed Settings</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Feed Title</label>
+                            <input type="text" id="feedTitle" 
+                                   placeholder="e.g., My Tech Blog Feed" 
+                                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Feed Description</label>
+                            <textarea id="feedDescription" 
+                                     placeholder="e.g., Latest articles from my favorite tech blog" 
+                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                     rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Website URL</label>
                     <input type="url" id="url" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Title Selector (CSS)</label>
-                    <input type="text" id="titleSelector" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">Title Selector (XPath)</label>
+                    <input type="text" id="titleSelector" required 
+                           placeholder="e.g., //article//h2, //div[@class='post-title']" 
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">
+                        Common examples:
+                        <span class="font-mono bg-gray-100 px-1 rounded">//div[@class='article-title']</span>,
+                        <span class="font-mono bg-gray-100 px-1 rounded">//h2[@class='title']</span>,
+                        <span class="font-mono bg-gray-100 px-1 rounded">//article//h1</span>
+                    </p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-medium text-gray-700">Description Selector (CSS)</label>
-                    <input type="text" id="descriptionSelector" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <label class="block text-sm font-medium text-gray-700">Description Selector (XPath)</label>
+                    <input type="text" id="descriptionSelector" required 
+                           placeholder="e.g., //div[@class='article-content'], //div[@class='post-excerpt']" 
+                           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">
+                        Common examples:
+                        <span class="font-mono bg-gray-100 px-1 rounded">//div[@class='article-summary']</span>,
+                        <span class="font-mono bg-gray-100 px-1 rounded">//div[@class='post-content']//p[1]</span>,
+                        <span class="font-mono bg-gray-100 px-1 rounded">//div[@class='entry-content']</span>
+                    </p>
                 </div>
                 
                 <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
@@ -55,6 +92,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Add this right after the main form div -->
+        <div class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg overflow-y-auto p-4 transform transition-transform duration-300" id="selectorPanel">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Available Selectors</h3>
+                <button onclick="togglePanel()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="space-y-2">
+                <input type="text" id="selectorSearch" 
+                       placeholder="Search selectors..." 
+                       class="w-full px-3 py-2 border rounded-md">
+                
+                <div class="flex space-x-2">
+                    <button onclick="filterSelectors('all')" class="px-2 py-1 text-sm rounded bg-blue-100 hover:bg-blue-200">All</button>
+                    <button onclick="filterSelectors('id')" class="px-2 py-1 text-sm rounded bg-blue-100 hover:bg-blue-200">IDs</button>
+                    <button onclick="filterSelectors('class')" class="px-2 py-1 text-sm rounded bg-blue-100 hover:bg-blue-200">Classes</button>
+                </div>
+            </div>
+            
+            <div id="selectorList" class="mt-4 space-y-2">
+                <!-- Selectors will be populated here -->
+            </div>
+        </div>
     </div>
 
     <script>
@@ -63,8 +128,10 @@
             const url = document.getElementById('url').value;
             const titleSelector = document.getElementById('titleSelector').value;
             const descriptionSelector = document.getElementById('descriptionSelector').value;
+            const feedTitle = encodeURIComponent(document.getElementById('feedTitle').value);
+            const feedDescription = encodeURIComponent(document.getElementById('feedDescription').value);
             
-            const rssUrl = `${currentUrl}generate_rss?url=${encodeURIComponent(url)}&title_selector=${encodeURIComponent(titleSelector)}&description_selector=${encodeURIComponent(descriptionSelector)}`;
+            const rssUrl = `${currentUrl}generate_rss?url=${encodeURIComponent(url)}&title_selector=${encodeURIComponent(titleSelector)}&description_selector=${encodeURIComponent(descriptionSelector)}&feed_title=${feedTitle}&feed_description=${feedDescription}`;
             
             navigator.clipboard.writeText(rssUrl)
                 .then(() => alert('RSS URL copied to clipboard!'))
@@ -97,13 +164,89 @@
             return html;
         }
 
+        // Replace the CSS selector validation with XPath validation
+        function isValidXPathSelector(selector) {
+            try {
+                document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // Update the title selector validation
+        document.getElementById('titleSelector').addEventListener('input', function(e) {
+            const input = e.target;
+            const selector = input.value;
+            
+            if (selector && !isValidXPathSelector(selector)) {
+                input.setCustomValidity('Invalid XPath selector');
+                input.classList.add('border-red-500');
+                
+                let errorMsg = input.parentNode.querySelector('.error-message');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-message text-red-500 text-sm mt-1';
+                    input.parentNode.appendChild(errorMsg);
+                }
+                errorMsg.textContent = 'Please enter a valid XPath selector';
+            } else {
+                input.setCustomValidity('');
+                input.classList.remove('border-red-500');
+                
+                const errorMsg = input.parentNode.querySelector('.error-message');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            }
+        });
+
+        // Update the description selector validation
+        document.getElementById('descriptionSelector').addEventListener('input', function(e) {
+            const input = e.target;
+            const selector = input.value;
+            
+            if (selector && !isValidXPathSelector(selector)) {
+                input.setCustomValidity('Invalid XPath selector');
+                input.classList.add('border-red-500');
+                
+                let errorMsg = input.parentNode.querySelector('.error-message');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-message text-red-500 text-sm mt-1';
+                    input.parentNode.appendChild(errorMsg);
+                }
+                errorMsg.textContent = 'Please enter a valid XPath selector';
+            } else {
+                input.setCustomValidity('');
+                input.classList.remove('border-red-500');
+                
+                const errorMsg = input.parentNode.querySelector('.error-message');
+                if (errorMsg) {
+                    errorMsg.remove();
+                }
+            }
+        });
+
+        // Update the form submission to include validation
         document.getElementById('rssForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            const titleSelector = document.getElementById('titleSelector').value;
+            const descriptionSelector = document.getElementById('descriptionSelector').value;
+            
+            // Validate both selectors before submitting
+            if (!isValidXPathSelector(titleSelector) || !isValidXPathSelector(descriptionSelector)) {
+                alert('Please fix the invalid XPath selectors before submitting');
+                return;
+            }
             
             const data = {
                 url: document.getElementById('url').value,
                 title_selector: document.getElementById('titleSelector').value,
-                description_selector: document.getElementById('descriptionSelector').value
+                description_selector: document.getElementById('descriptionSelector').value,
+                feed_title: document.getElementById('feedTitle').value,
+                feed_description: document.getElementById('feedDescription').value
             };
             
             try {
@@ -116,6 +259,11 @@
                 });
                 
                 const result = await response.json();
+                
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+                
                 const resultDiv = document.getElementById('result');
                 resultDiv.classList.remove('hidden');
                 
@@ -125,10 +273,166 @@
                 // Show formatted preview
                 const feedPreview = document.getElementById('feedPreview');
                 feedPreview.innerHTML = parseXMLtoHTML(result.rss_content);
+                
             } catch (error) {
-                alert('Error generating RSS feed: ' + error);
+                alert('Error generating RSS feed: ' + error.message);
             }
         });
+
+        let allSelectors = [];
+
+        function togglePanel() {
+            const panel = document.getElementById('selectorPanel');
+            panel.classList.toggle('translate-x-full');
+        }
+
+        async function fetchSelectors(url) {
+            try {
+                const response = await fetch('/get_selectors', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                allSelectors = data.selectors;
+                displaySelectors(allSelectors);
+                
+            } catch (error) {
+                console.error('Error fetching selectors:', error);
+            }
+        }
+
+        function displaySelectors(selectors) {
+            const container = document.getElementById('selectorList');
+            container.innerHTML = selectors.map(selector => `
+                <div class="p-2 hover:bg-gray-50 rounded cursor-pointer border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <code class="text-sm text-blue-600">${selector.css}</code>
+                        <span class="text-xs text-gray-500">(${selector.example} matches)</span>
+                    </div>
+                    <div class="mt-1">
+                        <code class="text-xs text-gray-500">${selector.xpath}</code>
+                    </div>
+                    ${selector.samples.length ? `
+                        <div class="mt-2 space-y-2">
+                            <p class="text-xs font-medium text-gray-700">Content samples:</p>
+                            ${selector.samples.map((sample, index) => `
+                                <div class="text-xs bg-gray-50 p-2 rounded">
+                                    <span class="text-gray-400">#${index + 1}:</span>
+                                    <span class="text-gray-600">${sample}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="mt-2 flex space-x-2">
+                        <button onclick="useSelector('${selector.css}', 'title')" 
+                                class="text-xs px-2 py-1 bg-green-100 hover:bg-green-200 rounded">
+                            Use as Title
+                        </button>
+                        <button onclick="useSelector('${selector.css}', 'description')" 
+                                class="text-xs px-2 py-1 bg-blue-100 hover:bg-blue-200 rounded">
+                            Use as Description
+                        </button>
+                        <button onclick="previewSelector('${selector.css}')"
+                                class="text-xs px-2 py-1 bg-purple-100 hover:bg-purple-200 rounded">
+                            Highlight on Page
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update the useSelector function to use XPath
+        function useSelector(selector, type) {
+            const input = document.getElementById(type === 'title' ? 'titleSelector' : 'descriptionSelector');
+            // Convert CSS selector to XPath using the server response
+            const selectorData = allSelectors.find(s => s.css === selector);
+            if (selectorData) {
+                input.value = selectorData.xpath;
+                input.dispatchEvent(new Event('input'));
+            }
+        }
+
+        function filterSelectors(type) {
+            let filtered = [...allSelectors];
+            
+            if (type === 'id') {
+                filtered = allSelectors.filter(s => s.css.includes('#'));
+            } else if (type === 'class') {
+                filtered = allSelectors.filter(s => s.css.includes('.'));
+            }
+            
+            displaySelectors(filtered);
+        }
+
+        // Add search functionality
+        document.getElementById('selectorSearch').addEventListener('input', (e) => {
+            const search = e.target.value.toLowerCase();
+            const filtered = allSelectors.filter(s => 
+                s.css.toLowerCase().includes(search) || 
+                s.xpath.toLowerCase().includes(search)
+            );
+            displaySelectors(filtered);
+        });
+
+        // Update the URL input handler to fetch selectors
+        document.getElementById('url').addEventListener('change', (e) => {
+            const url = e.target.value;
+            if (url) {
+                fetchSelectors(url);
+            }
+        });
+
+        // Add preview functionality
+        function previewSelector(selector) {
+            // Remove any existing highlights
+            document.querySelectorAll('.selector-highlight').forEach(el => {
+                el.classList.remove('selector-highlight');
+            });
+            
+            // Add highlight class to matching elements
+            try {
+                document.querySelectorAll(selector).forEach(el => {
+                    el.classList.add('selector-highlight');
+                    
+                    // Scroll first element into view
+                    if (el === document.querySelector(selector)) {
+                        el.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                });
+                
+                // Remove highlights after 2 seconds
+                setTimeout(() => {
+                    document.querySelectorAll('.selector-highlight').forEach(el => {
+                        el.classList.remove('selector-highlight');
+                    });
+                }, 2000);
+            } catch (e) {
+                console.error('Invalid selector:', e);
+            }
+        }
+
+        // Add CSS for highlighting
+        const style = document.createElement('style');
+        style.textContent = `
+            .selector-highlight {
+                outline: 2px solid #6366f1 !important;
+                background-color: rgba(99, 102, 241, 0.1) !important;
+                transition: all 0.3s ease-in-out !important;
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

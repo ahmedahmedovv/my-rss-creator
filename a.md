@@ -1,1 +1,0 @@
-http://127.0.0.1:5000/generate_rss?url=https%3A%2F%2Fwww.trthaber.com%2Fson-dakika-haberleri&title_selector=.title&description_selector=.title
