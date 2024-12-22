@@ -83,7 +83,7 @@
                                 <p class="mb-1">Feed saved successfully!</p>
                                 <div class="d-flex">
                                     <input type="text" id="savedFeedUrl" readonly class="form-control flex-1" />
-                                    <button onclick="copySavedUrl()" class="btn ml-2">Copy URL</button>
+                                    <button type="button" onclick="copySavedUrl(event)" class="btn ml-2">Copy URL</button>
                                 </div>
                             </div>
                         </div>
@@ -466,17 +466,19 @@
             }
         }
 
-        function copySavedUrl() {
+        function copySavedUrl(event) {
+            event.preventDefault();  // Prevent any form submission
+            event.stopPropagation();  // Stop event bubbling
+            
             const urlInput = document.getElementById('savedFeedUrl');
             urlInput.select();
             document.execCommand('copy');
             
-            // Show temporary copy confirmation
+            // Simple success feedback
             const copyBtn = event.target;
-            const originalText = copyBtn.textContent;
             copyBtn.textContent = 'Copied!';
             setTimeout(() => {
-                copyBtn.textContent = originalText;
+                copyBtn.textContent = 'Copy URL';
             }, 2000);
         }
     </script>
