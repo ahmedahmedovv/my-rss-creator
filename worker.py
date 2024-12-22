@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 import requests
 from lxml import html, etree
 import feedgenerator
+from utils import create_rss_feed
 
 # Load environment variables
 load_dotenv()
@@ -18,55 +19,6 @@ if not supabase_url or not supabase_key:
     raise ValueError("Missing required environment variables")
 
 supabase = create_client(supabase_url, supabase_key)
-
-def create_rss_feed(url: str, title_xpath: str, description_xpath: str) -> str:
-    """Generate RSS feed from webpage using XPath selectors."""
-    try:
-        response = requests.get(url)
-        tree = html.fromstring(response.content)
-        tree.make_links_absolute(url)
-        
-        feed = feedgenerator.Rss201rev2Feed(
-            title=f"Custom RSS - {url}",
-            link=url,
-            description=f"Custom RSS feed for {url}",
-            language="en"
-        )
-        
-        title_elements = tree.xpath(title_xpath)
-        
-        for i, title_element in enumerate(title_elements):
-            title = title_element.text_content().strip()
-            
-            # Extract link from title element or its parent/child
-            link = None
-            if title_element.get('href'):
-                link = title_element.get('href')
-            elif title_element.getparent().tag == 'a':
-                link = title_element.getparent().get('href')
-            elif title_element.find('.//a') is not None:
-                link = title_element.find('.//a').get('href')
-            
-            # Make link absolute if it's relative
-            if link and not link.startswith(('http://', 'https://')):
-                link = f"{url.rstrip('/')}/{link.lstrip('/')}"
-            
-            # Find description using xpath
-            try:
-                description = tree.xpath(description_xpath)[i].text_content().strip()
-            except:
-                description = "No description available"
-            
-            feed.add_item(
-                title=title or 'No title',
-                link=link or url,
-                description=description,
-                pubdate=datetime.now()
-            )
-            
-        return feed.writeString('utf-8')
-    except Exception as e:
-        return f"Error: {str(e)}"
 
 def update_feed(feed_data):
     """Update a single feed in storage."""
