@@ -351,8 +351,16 @@
         }
 
         function displaySelectors(selectors) {
+            // Sort selectors by example count (higher numbers first)
+            const sortedSelectors = selectors.sort((a, b) => {
+                // Convert "X matches" string to number
+                const aCount = parseInt(a.example);
+                const bCount = parseInt(b.example);
+                return bCount - aCount;  // Sort in descending order
+            });
+
             const container = document.getElementById('selectorList');
-            container.innerHTML = selectors.map(selector => `
+            container.innerHTML = sortedSelectors.map(selector => `
                 <div class="Box-row">
                     <div class="d-flex flex-justify-between mb-2">
                         <code class="color-fg-accent">${selector.css}</code>
