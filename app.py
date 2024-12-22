@@ -19,14 +19,45 @@ def create_rss_feed(url, title_selector, description_selector):
             language="en"
         )
         
-        titles = soup.select(title_selector)
-        descriptions = soup.select(description_selector)
+        # Find all article containers
+        articles = soup.select(title_selector)
         
-        for title, desc in zip(titles, descriptions):
+        for article in articles:
+            # Find title
+            title = article.text.strip()
+            
+            # Find link - try different common patterns
+            link = None
+            # 1. Check if the title is wrapped in an <a> tag
+            if article.name == 'a':
+                link = article.get('href')
+            # 2. Look for nearest parent <a> tag
+            elif article.find_parent('a'):
+                link = article.find_parent('a').get('href')
+            # 3. Look for nearest child <a> tag
+            elif article.find('a'):
+                link = article.find('a').get('href')
+            
+            # Make relative URLs absolute
+            if link and not link.startswith(('http://', 'https://')):
+                if link.startswith('/'):
+                    # Handle absolute paths
+                    base_url = '/'.join(url.split('/')[:3])  # Get domain part
+                    link = base_url + link
+                else:
+                    # Handle relative paths
+                    link = url.rstrip('/') + '/' + link
+
+            # Find description using the same container
+            description = ''
+            desc_element = soup.select(description_selector)
+            if desc_element:
+                description = desc_element[0].text.strip()
+            
             feed.add_item(
-                title=title.text.strip(),
-                link=url,
-                description=desc.text.strip(),
+                title=title,
+                link=link or url,  # Fallback to main URL if no specific link found
+                description=description,
                 pubdate=datetime.datetime.now()
             )
             
