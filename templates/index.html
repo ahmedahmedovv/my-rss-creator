@@ -30,10 +30,6 @@
                 <div class="form-group mb-4">
                     <div class="form-group-header">
                         <h2 class="h4 color-fg-default">2. Configure Selectors</h2>
-                        <button type="button" onclick="togglePanel()" 
-                                class="btn btn-sm btn-outline float-right">
-                            Show Selector Helper
-                        </button>
                     </div>
                     <div class="form-group-body">
                         <div class="mb-3">
@@ -48,22 +44,6 @@
                                    class="form-control"
                                    placeholder="//article//p[1]">
                         </div>
-                    </div>
-                </div>
-
-                <!-- Step 3: Feed Details -->
-                <div class="form-group mb-4">
-                    <div class="form-group-header">
-                        <h2 class="h4 color-fg-default">3. Feed Details (Optional)</h2>
-                    </div>
-                    <div class="form-group-body">
-                        <input type="text" id="feedTitle" 
-                               class="form-control mb-2"
-                               placeholder="Feed Title">
-                        <textarea id="feedDescription" 
-                                  class="form-control"
-                                  rows="2"
-                                  placeholder="Feed Description"></textarea>
                     </div>
                 </div>
 
@@ -125,10 +105,8 @@
             const url = document.getElementById('url').value;
             const titleSelector = document.getElementById('titleSelector').value;
             const descriptionSelector = document.getElementById('descriptionSelector').value;
-            const feedTitle = encodeURIComponent(document.getElementById('feedTitle').value);
-            const feedDescription = encodeURIComponent(document.getElementById('feedDescription').value);
             
-            const rssUrl = `${currentUrl}generate_rss?url=${encodeURIComponent(url)}&title_selector=${encodeURIComponent(titleSelector)}&description_selector=${encodeURIComponent(descriptionSelector)}&feed_title=${feedTitle}&feed_description=${feedDescription}`;
+            const rssUrl = `${currentUrl}generate_rss?url=${encodeURIComponent(url)}&title_selector=${encodeURIComponent(titleSelector)}&description_selector=${encodeURIComponent(descriptionSelector)}`;
             
             navigator.clipboard.writeText(rssUrl)
                 .then(() => alert('RSS URL copied to clipboard!'))
@@ -232,9 +210,7 @@
             const data = {
                 url: document.getElementById('url').value,
                 title_selector: document.getElementById('titleSelector').value,
-                description_selector: document.getElementById('descriptionSelector').value,
-                feed_title: document.getElementById('feedTitle').value,
-                feed_description: document.getElementById('feedDescription').value
+                description_selector: document.getElementById('descriptionSelector').value
             };
             
             try {
