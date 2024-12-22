@@ -26,7 +26,7 @@ def create_rss_feed(url, title_xpath, description_xpath):
         # Find all article titles using XPath
         titles = tree.xpath(title_xpath)
         
-        for title_element in titles:
+        for i, title_element in enumerate(titles):
             # Get title text
             title = title_element.text_content().strip()
             
@@ -50,11 +50,27 @@ def create_rss_feed(url, title_xpath, description_xpath):
                 else:
                     link = url.rstrip('/') + '/' + link
             
-            # Find description using XPath
+            # Find description using XPath relative to the current title element
             description = ''
-            desc_elements = tree.xpath(description_xpath)
-            if desc_elements:
-                description = desc_elements[0].text_content().strip()
+            try:
+                # First try to find description relative to the current title element
+                relative_xpath = f"following::{description_xpath[2:]}"  # Remove // from the start
+                desc_elements = title_element.xpath(relative_xpath)
+                
+                if not desc_elements:
+                    # If no relative match, try finding the corresponding description by index
+                    all_descriptions = tree.xpath(description_xpath)
+                    if i < len(all_descriptions):
+                        desc_elements = [all_descriptions[i]]
+                
+                if desc_elements:
+                    description = desc_elements[0].text_content().strip()
+            except Exception as e:
+                print(f"Error finding description: {e}")
+                # Fallback to direct xpath if relative search fails
+                all_descriptions = tree.xpath(description_xpath)
+                if i < len(all_descriptions):
+                    description = all_descriptions[i].text_content().strip()
             
             feed.add_item(
                 title=title,
