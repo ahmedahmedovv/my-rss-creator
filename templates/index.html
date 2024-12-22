@@ -33,13 +33,70 @@
             </form>
             
             <div id="result" class="mt-6 hidden">
-                <h2 class="text-lg font-medium text-gray-900 mb-2">Generated RSS Feed</h2>
-                <pre class="bg-gray-50 p-4 rounded-md overflow-x-auto text-sm"></pre>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-medium text-gray-900">Generated RSS Feed</h2>
+                    <button onclick="copyRssUrl()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                        Copy RSS URL
+                    </button>
+                </div>
+
+                <!-- Raw XML Preview -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Raw XML</h3>
+                    <pre class="bg-gray-50 p-4 rounded-md overflow-x-auto text-sm"></pre>
+                </div>
+
+                <!-- Formatted Preview -->
+                <div class="preview-section">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Feed Preview</h3>
+                    <div id="feedPreview" class="bg-gray-50 p-4 rounded-md">
+                        <!-- Preview items will be inserted here -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        function copyRssUrl() {
+            const currentUrl = window.location.href;
+            const url = document.getElementById('url').value;
+            const titleSelector = document.getElementById('titleSelector').value;
+            const descriptionSelector = document.getElementById('descriptionSelector').value;
+            
+            const rssUrl = `${currentUrl}generate_rss?url=${encodeURIComponent(url)}&title_selector=${encodeURIComponent(titleSelector)}&description_selector=${encodeURIComponent(descriptionSelector)}`;
+            
+            navigator.clipboard.writeText(rssUrl)
+                .then(() => alert('RSS URL copied to clipboard!'))
+                .catch(err => alert('Failed to copy URL: ' + err));
+        }
+
+        function parseXMLtoHTML(xmlString) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+            const items = xmlDoc.getElementsByTagName("item");
+            let html = '';
+
+            for (let item of items) {
+                const title = item.getElementsByTagName("title")[0]?.textContent || 'No title';
+                const link = item.getElementsByTagName("link")[0]?.textContent || '#';
+                const description = item.getElementsByTagName("description")[0]?.textContent || 'No description';
+
+                html += `
+                    <div class="border-b border-gray-200 py-4 last:border-b-0">
+                        <h4 class="text-lg font-medium mb-2">
+                            <a href="${link}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                ${title}
+                            </a>
+                        </h4>
+                        <p class="text-gray-600">${description}</p>
+                    </div>
+                `;
+            }
+
+            return html;
+        }
+
         document.getElementById('rssForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -61,7 +118,13 @@
                 const result = await response.json();
                 const resultDiv = document.getElementById('result');
                 resultDiv.classList.remove('hidden');
+                
+                // Show raw XML
                 resultDiv.querySelector('pre').textContent = result.rss_content;
+                
+                // Show formatted preview
+                const feedPreview = document.getElementById('feedPreview');
+                feedPreview.innerHTML = parseXMLtoHTML(result.rss_content);
             } catch (error) {
                 alert('Error generating RSS feed: ' + error);
             }
