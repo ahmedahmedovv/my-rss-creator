@@ -20,7 +20,6 @@ def index():
             response.raise_for_status()
             
             soup = BeautifulSoup(response.text, 'html.parser')
-            
             elements = soup.select(selector)
             
             if not elements:
@@ -28,11 +27,19 @@ def index():
             else:
                 content = []
                 for element in elements:
-                    text_content = element.get_text(strip=True)
-                    html_content = str(element)
+                    # Find link in the element or its children
+                    link = element.find('a')
+                    href = link.get('href') if link else None
+                    
+                    # If href is relative, make it absolute
+                    if href and not href.startswith(('http://', 'https://')):
+                        from urllib.parse import urljoin
+                        href = urljoin(url, href)
+                    
                     content.append({
-                        'text': text_content,
-                        'html': html_content
+                        'text': element.get_text(strip=True),
+                        'html': str(element),
+                        'link': href
                     })
                 
                 if not any(item['text'] for item in content):

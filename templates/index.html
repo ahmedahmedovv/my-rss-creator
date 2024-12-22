@@ -77,6 +77,20 @@
         .result-item:last-child {
             border-bottom: none;
         }
+
+        .link-content {
+            margin: 0.5rem 0;
+            word-break: break-all;
+        }
+        
+        .link-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .link-content a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -105,6 +119,13 @@
             <div class="result-item">
                 {% if item is mapping %}
                     <div class="text-content">{{ item.text }}</div>
+                    {% if item.link %}
+                        <div class="link-content">
+                            <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer">
+                                {{ item.link }}
+                            </a>
+                        </div>
+                    {% endif %}
                     <details>
                         <summary>Show HTML</summary>
                         <pre><code>{{ item.html }}</code></pre>
