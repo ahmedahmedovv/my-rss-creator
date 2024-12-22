@@ -133,12 +133,14 @@ def get_all_selectors(url):
                         if text:
                             content_samples.append(text)
                     
-                    selector_data.append({
-                        'css': selector,
-                        'xpath': xpath,
-                        'example': len(matching_elements),
-                        'samples': content_samples
-                    })
+                    # Only add selector if it has content samples
+                    if content_samples:
+                        selector_data.append({
+                            'css': selector,
+                            'xpath': xpath,
+                            'example': len(matching_elements),
+                            'samples': content_samples
+                        })
             except:
                 continue
                 
