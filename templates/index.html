@@ -7,16 +7,16 @@
     <link href="https://unpkg.com/@primer/css@^20.2.4/dist/primer.css" rel="stylesheet" />
 </head>
 <body class="color-bg-default">
-    <div class="container-fluid p-responsive py-6">
-        <h1 class="h1 text-center color-fg-default mb-6" style="font-size: 2.5rem;">RSS Generator</h1>
+    <div class="container-fluid p-responsive py-3">
+        <h1 class="h1 text-center color-fg-default mb-3" style="font-size: 2rem;">RSS Generator</h1>
         
-        <div class="d-flex" style="gap: 2rem;">
+        <div class="d-flex" style="gap: 2rem; height: calc(100vh - 100px);">
             <!-- Left Panel: Input Form -->
-            <div class="Box color-shadow-large" style="flex: 1;">
+            <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
                 <div class="Box-header">
                     <h2 class="Box-title" style="font-size: 1.8rem;">Configuration</h2>
                 </div>
-                <form id="rssForm" class="Box-body">
+                <form id="rssForm" class="Box-body" style="flex: 1; overflow-y: auto;">
                     <!-- Step 1: URL Input -->
                     <div class="form-group mb-4">
                         <div class="form-group-header">
@@ -62,12 +62,12 @@
             </div>
 
             <!-- Middle Panel: XPath Selector List -->
-            <div class="Box color-shadow-large" style="flex: 1;">
+            <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
                 <div class="Box-header">
                     <h2 class="Box-title" style="font-size: 1.8rem;">Available Selectors</h2>
                 </div>
-                <div class="Box-body">
-                    <div id="selectorList" class="Box" style="max-height: 700px; overflow-y: auto;">
+                <div class="Box-body" style="flex: 1; overflow-y: auto;">
+                    <div id="selectorList" class="Box">
                         <div class="blankslate">
                             <h3 class="blankslate-heading">Enter a URL</h3>
                             <p class="blankslate-text">Available selectors will appear here after you enter a URL.</p>
@@ -77,7 +77,7 @@
             </div>
 
             <!-- Right Panel: Preview -->
-            <div class="Box color-shadow-large" style="flex: 1;">
+            <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
                 <div class="Box-header">
                     <h2 class="Box-title" style="font-size: 1.8rem;">Preview</h2>
                     <button onclick="copyRssUrl()" class="btn btn-sm"
@@ -85,9 +85,8 @@
                         Copy RSS URL
                     </button>
                 </div>
-                <div id="result" class="Box-body">
-                    <div id="feedPreview" class="Box p-3 color-bg-subtle" 
-                         style="min-height: 400px; max-height: 800px; overflow-y: auto; font-size: 1.1rem;">
+                <div id="result" class="Box-body" style="flex: 1; overflow-y: auto;">
+                    <div id="feedPreview" class="Box p-3 color-bg-subtle">
                         <div class="blankslate">
                             <h3 class="blankslate-heading">No RSS Feed Generated Yet</h3>
                             <p class="blankslate-text">Configure the selectors and click Generate RSS Feed to see the preview here.</p>
