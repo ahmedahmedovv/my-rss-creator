@@ -2,449 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>URL Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Content Extractor</title>
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f8fafc;
+            --panel-color: #ffffff;
+        }
+
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            padding: 2rem;
         }
+
         .container {
-            display: flex;
-            height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
         }
-        .left-panel {
-            width: 30%;
-            padding: 16px;
-            background-color: #ffffff;
-            border-right: 1px solid #eaeaea;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            height: 100vh;
-            overflow-y: auto;
+
+        .card {
+            background-color: var(--panel-color);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
-        .right-panel {
-            width: 70%;
-            height: 100vh;
-            overflow-y: auto;
-            padding: 0;
-            position: relative;
+
+        .form-group {
+            margin-bottom: 1rem;
         }
-        .url-input-container {
-            position: relative;
-            margin-bottom: 10px;
-        }
-        .url-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #eaeaea;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-        .url-input:focus {
-            outline: none;
-            border-color: #000;
-        }
-        .url-input::placeholder {
-            color: #adb5bd;
-        }
-        .drop-zone {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            min-height: 200px;
-        }
-        .drop-zone.dragover {
-            background: #e3e8ec;
-            border-color: #2d3436;
-            box-shadow: 0 0 0 4px rgba(45, 52, 54, 0.1);
-        }
-        .drop-icon {
-            font-size: 24px;
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-        .article-group {
-            background: #ffffff;
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        .main-article {
-            background: #ffffff;
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        .similar-articles {
-            background: #ffffff;
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        .similar-articles h4 {
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #2d3436;
-            margin: 0 0 16px 0;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .similar-articles h4::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 4px;
-            background: #2d3436;
-            border-radius: 50%;
-        }
-        .similar-article {
-            padding: 16px;
-            margin: 8px 0;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border: 1px solid #eaeaea;
-            transition: all 0.2s ease;
-        }
-        .similar-article:hover {
-            border-color: #2d3436;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        .link-title {
-            font-size: 14px;
-            font-weight: 500;
-            color: #2d3436;
-            margin-bottom: 6px;
-        }
-        .dropped-link a {
-            color: #495057;
-            text-decoration: none;
-            font-size: 13px;
+
+        label {
             display: block;
-            margin: 4px 0;
-            word-break: break-all;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
         }
-        .dropped-link a:hover {
-            color: #2d3436;
-        }
-        .selector-text {
-            font-family: monospace;
-            font-size: 11px;
-            color: #868e96;
-            background: #f8f9fa;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 8px;
-            border: 1px solid #e9ecef;
-        }
-        #webpage-content {
+
+        input[type="text"] {
             width: 100%;
-            height: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
             border: none;
-        }
-        .loading {
-            position: relative;
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        .loading::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 16px;
-            height: 16px;
-            margin: -8px 0 0 -8px;
-            border: 2px solid #2d3436;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .drop-zone-empty {
-            height: 200px;
-            border: 2px dashed #d0d0d0;
-            border-radius: 8px;
-            padding: 20px;
-            background: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #2d3436;
-        }
-        .drop-zone-empty svg {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 12px;
-            color: #2d3436;
-        }
-        .drop-zone-empty span {
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .similar-articles {
-            background: #ffffff;
-            border: 1px solid #eaeaea;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .similar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            border-radius: 0.375rem;
             cursor: pointer;
-            user-select: none;
-            margin-bottom: 16px;
-        }
-
-        .similar-title {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #2d3436;
-            font-weight: 600;
-        }
-
-        .similar-count {
-            background: #f1f3f5;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            color: #495057;
             font-weight: 500;
+            transition: background-color 0.2s;
         }
 
-        .similar-content {
-            display: none;
-            margin-top: 12px;
+        button:hover {
+            background-color: var(--secondary-color);
         }
 
-        .similar-content.expanded {
-            display: block;
+        .results {
+            margin-top: 2rem;
         }
 
-        .chevron-icon {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.2s ease;
+        .result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        .similar-header.expanded .chevron-icon {
-            transform: rotate(180deg);
-        }
-
-        .no-similar {
-            color: #868e96;
-            font-size: 13px;
-            text-align: center;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 6px;
-        }
-
-        .similar-content {
-            display: none;
-            margin-top: 12px;
-        }
-
-        .similar-content.expanded {
-            display: block;
-        }
-
-        .chevron-icon {
-            width: 16px;
-            height: 16px;
-            transition: transform 0.2s ease;
-        }
-
-        .similar-header.expanded .chevron-icon {
-            transform: rotate(180deg);
-        }
-
-        .similar-header:hover {
-            opacity: 0.8;
-        }
-
-        .similar-header {
-            cursor: pointer;
-            padding: 4px 0;
+        .result-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="left-panel">
-            <input type="text" id="url-input" class="url-input" placeholder="Enter URL...">
-            
-            <div id="drop-zone" class="drop-zone">
-                <div class="drop-zone-empty">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V7a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2z" />
-                    </svg>
-                    <span>Drop link here</span>
+        <div class="card">
+            <h1>Web Content Extractor</h1>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="url">Website URL:</label>
+                    <input type="text" id="url" name="url" required 
+                           placeholder="https://example.com">
                 </div>
+                <div class="form-group">
+                    <label for="class_name">CSS Selector:</label>
+                    <input type="text" id="class_name" name="class_name" required 
+                           placeholder="Enter CSS selector (e.g., .className, .parent > .child)">
+                </div>
+                <button type="submit">Extract Content</button>
+            </form>
+        </div>
+
+        {% if content %}
+        <div class="card results">
+            <h2>Extracted Content</h2>
+            {% for item in content %}
+            <div class="result-item">
+                {% if item is mapping %}
+                    <div class="text-content">{{ item.text }}</div>
+                    <details>
+                        <summary>Show HTML</summary>
+                        <pre><code>{{ item.html }}</code></pre>
+                    </details>
+                {% else %}
+                    {{ item }}
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
-        <div class="right-panel">
-            <iframe id="webpage-content" sandbox="allow-same-origin"></iframe>
-        </div>
+        {% endif %}
     </div>
-
-    <script>
-        document.getElementById('url-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                this.classList.add('loading');
-                fetch('/fetch-page', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({url: this.value})
-                })
-                .then(response => response.json())
-                .then(data => {
-                    this.classList.remove('loading');
-                    if (data.error) {
-                        alert(data.error);
-                    } else {
-                        // Get the iframe
-                        const iframe = document.getElementById('webpage-content');
-                        
-                        // Write the content to the iframe
-                        iframe.srcdoc = data.html;
-                        
-                        // After the iframe loads, set up message passing
-                        iframe.onload = function() {
-                            try {
-                                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                                // Make sure all links are draggable
-                                iframeDoc.querySelectorAll('a').forEach(link => {
-                                    link.draggable = true;
-                                    link.addEventListener('dragstart', function(e) {
-                                        e.dataTransfer.setData('text/plain', this.getAttribute('data-href'));
-                                        e.dataTransfer.setData('text/selector', this.getAttribute('data-selector'));
-                                        e.dataTransfer.setData('text/link-text', this.getAttribute('data-text'));
-                                        e.dataTransfer.setData('text/similar-pattern', this.getAttribute('data-similar-selector'));
-                                    });
-                                });
-                            } catch (e) {
-                                console.error('Cannot access iframe content:', e);
-                            }
-                        };
-                    }
-                })
-                .catch(error => {
-                    this.classList.remove('loading');
-                    alert('Error fetching page: ' + error);
-                });
-            }
-        });
-
-        const dropZone = document.getElementById('drop-zone');
-
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('dragover');
-        });
-
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
-        });
-
-        dropZone.addEventListener('drop', async (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('dragover');
-            
-            const link = e.dataTransfer.getData('text/plain');
-            const selector = e.dataTransfer.getData('text/selector');
-            const linkText = e.dataTransfer.getData('text/link-text');
-            const similarPattern = e.dataTransfer.getData('text/similar-pattern');
-            
-            // Clear the drop zone content first
-            dropZone.innerHTML = '';
-            
-            // Create main article box
-            const mainArticle = document.createElement('div');
-            mainArticle.className = 'main-article';
-            mainArticle.innerHTML = `
-                <div class="link-title">${linkText || 'Untitled Link'}</div>
-                <a href="${link}" target="_blank">${link}</a>
-                <div class="selector-text">${selector}</div>
-            `;
-            
-            // Create similar articles box
-            const similarArticles = document.createElement('div');
-            similarArticles.className = 'similar-articles';
-            
-            // Find similar articles in the iframe
-            const iframe = document.getElementById('webpage-content');
-            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-            
-            let similarCount = 0;
-            const similarLinks = [];
-            
-            iframeDoc.querySelectorAll('a').forEach(a => {
-                if (a.getAttribute('data-similar-selector') === similarPattern && 
-                    a.getAttribute('data-href') !== link) {
-                    similarCount++;
-                    similarLinks.push(`
-                        <div class="similar-article">
-                            <div class="link-title">${a.getAttribute('data-text') || 'Untitled Link'}</div>
-                            <a href="${a.getAttribute('data-href')}" target="_blank">
-                                ${a.getAttribute('data-href')}
-                            </a>
-                            <div class="selector-text">${a.getAttribute('data-selector')}</div>
-                        </div>
-                    `);
-                }
-            });
-            
-            // Create similar articles header with count and dropdown
-            similarArticles.innerHTML = `
-                <div class="similar-header">
-                    <div class="similar-title">
-                        <span>Similar Articles</span>
-                        <span class="similar-count">${similarCount}</span>
-                    </div>
-                    <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 9l-7 7-7-7" />
-                    </svg>
-                </div>
-                <div class="similar-content">
-                    ${similarCount > 0 
-                        ? similarLinks.join('')
-                        : '<div class="no-similar">No similar articles found</div>'
-                    }
-                </div>
-            `;
-            
-            // Add click handler for dropdown
-            const header = similarArticles.querySelector('.similar-header');
-            const content = similarArticles.querySelector('.similar-content');
-            
-            header.addEventListener('click', () => {
-                header.classList.toggle('expanded');
-                content.classList.toggle('expanded');
-            });
-            
-            // Add both boxes to drop zone
-            dropZone.appendChild(mainArticle);
-            dropZone.appendChild(similarArticles);
-        });
-    </script>
 </body>
 </html>
