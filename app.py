@@ -76,20 +76,75 @@ def analyze_page_structure(tree) -> list[dict]:
     translator = GenericTranslator()
     selector_data = []
     
-    # Tags to exclude
-    excluded_tags = {
-        'script', 'style', 'noscript', 'iframe', 'meta', 
-        'link', 'head', 'svg', 'path', 'source', 'img'
+    # Tags that typically contain main content
+    content_tags = {
+        'article', 'main', 'section', 'div', 'span', 'p', 'h1', 'h2', 'h3', 'h4'
     }
 
-    # Common navigation/UI text patterns to exclude
-    excluded_text_patterns = {
-        'show all', 'view all', 'load more', 'show more',
-        'next page', 'previous page', 'tümünü gör', 'daha fazla',
-        'next', 'prev', 'previous', 'read more', 'devamı',
-        'copyright', 'all rights reserved', 'menu', 'search',
-        'share', 'follow us', 'subscribe'
+    # Tags to exclude (expanded list)
+    excluded_tags = {
+        # Technical/Meta elements
+        'script', 'style', 'noscript', 'iframe', 'meta', 
+        'link', 'head', 'svg', 'path', 'source', 'img',
+        
+        # Navigation elements
+        'nav', 'header', 'footer', 'sidebar',
+        
+        # Interactive elements
+        'button', 'input', 'select', 'textarea',
+        
+        # Advertisement related
+        'ads', 'advertisement', 'banner',
+        
+        # Social media
+        'social', 'share-buttons', 'comments'
     }
+
+    # Common patterns to exclude (expanded)
+    excluded_text_patterns = {
+        # Navigation patterns
+        'show all', 'view all', 'load more', 'show more',
+        'next page', 'previous page', 'next', 'prev', 'previous',
+        'tümünü gör', 'daha fazla', 'devamı',
+        
+        # UI elements
+        'menu', 'search', 'navigation', 'sidebar',
+        'header', 'footer', 'copyright',
+        
+        # Social/Interactive
+        'share', 'follow us', 'subscribe', 'sign up',
+        'login', 'register', 'comments', 'related articles',
+        
+        # Common footer text
+        'all rights reserved', 'privacy policy', 'terms of service',
+        'contact us', 'about us',
+        
+        # Advertisement related
+        'advertisement', 'sponsored', 'recommended for you',
+        
+        # Common UI buttons
+        'read more', 'learn more', 'click here', 'find out more',
+        'continue reading', 'more details'
+    }
+
+    # Common article container class/id patterns
+    article_patterns = {
+        'article', 'post', 'entry', 'content', 'main',
+        'story', 'news', 'blog-post', 'article-content',
+        'post-content', 'main-content', 'page-content'
+    }
+
+    def is_likely_article_container(element) -> bool:
+        """Check if an element is likely to be an article container."""
+        if element.tag in content_tags:
+            # Check class names
+            classes = element.get('class', '').lower().split()
+            ids = element.get('id', '').lower().split('-')
+            
+            # Check if any class or id contains article patterns
+            return any(pattern in ' '.join(classes + ids) 
+                      for pattern in article_patterns)
+        return False
 
     # Find all elements
     for element in tree.xpath('//*'):
