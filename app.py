@@ -12,6 +12,11 @@ from utils import (  # Add these imports
     validate_xpath_selector,
     create_rss_feed
 )
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.common.exceptions import WebDriverException
+import time
 
 app = Flask(__name__)
 
@@ -177,6 +182,38 @@ def analyze_page_structure(tree) -> list[dict]:
             
     return selector_data
 
+def get_page_content(url, use_selenium=False):
+    """Fetch page content using either requests or Selenium."""
+    if not use_selenium:
+        # Try regular requests first
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Connection': 'keep-alive',
+        }
+        response = requests.get(url, headers=headers, timeout=10)
+        return response.content
+
+    else:
+        # Use Selenium as fallback
+        chrome_options = Options()
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        
+        try:
+            driver = webdriver.Chrome(options=chrome_options)
+            driver.get(url)
+            # Wait for dynamic content to load
+            time.sleep(3)
+            content = driver.page_source
+            driver.quit()
+            return content.encode('utf-8')
+        except WebDriverException as e:
+            driver.quit() if 'driver' in locals() else None
+            raise Exception(f"Selenium error: {str(e)}")
+
 # ---- Routes ----
 
 @app.route('/')
@@ -223,15 +260,50 @@ def fetch_selectors():
         url = request.get_json().get('url')
         if not url:
             return jsonify({'error': 'URL is required'}), 400
+
+        # Try regular requests first
+        try:
+            content = get_page_content(url, use_selenium=False)
+            tree = html.fromstring(content)
+            selectors = analyze_page_structure(tree)
             
-        response = requests.get(url)
-        tree = html.fromstring(response.content)
-        selectors = analyze_page_structure(tree)
-        
-        return jsonify({'selectors': selectors})
-        
+            if selectors:
+                return jsonify({'selectors': selectors})
+                
+        except Exception as e:
+            print(f"Regular request failed: {str(e)}")
+
+        # If regular request fails or finds no selectors, try with Selenium
+        try:
+            content = get_page_content(url, use_selenium=True)
+            tree = html.fromstring(content)
+            selectors = analyze_page_structure(tree)
+            
+            if not selectors:
+                return jsonify({
+                    'error': 'No suitable selectors found. This might be due to:',
+                    'details': [
+                        'Website blocking automated access',
+                        'Content protected behind authentication',
+                        'Complex website structure',
+                        'Try manually inspecting the page and entering XPath selectors'
+                    ]
+                }), 404
+                
+            return jsonify({'selectors': selectors})
+            
+        except Exception as e:
+            return jsonify({
+                'error': 'Failed to access the website',
+                'details': [
+                    'Website may be blocking automated access',
+                    'Try manually inspecting the page and entering XPath selectors',
+                    f'Technical details: {str(e)}'
+                ]
+            }), 400
+
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': f'Server error: {str(e)}'}), 500
 
 @app.route('/save_feed', methods=['POST'])
 def save_feed():
