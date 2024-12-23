@@ -21,6 +21,7 @@ import urllib3
 import random
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+import ftfy
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
@@ -312,6 +313,10 @@ def fetch_selectors():
             selectors = analyze_page_structure(tree)
             
             if selectors:
+                # Fix encoding in selector samples
+                for selector in selectors:
+                    selector['samples'] = [ftfy.fix_text(sample) for sample in selector['samples']]
+                
                 return jsonify({'selectors': selectors})
                 
         except Exception as e:
@@ -333,6 +338,10 @@ def fetch_selectors():
                         'Try manually inspecting the page and entering XPath selectors'
                     ]
                 }), 404
+                
+            # Fix encoding in selector samples
+            for selector in selectors:
+                selector['samples'] = [ftfy.fix_text(sample) for sample in selector['samples']]
                 
             return jsonify({'selectors': selectors})
             

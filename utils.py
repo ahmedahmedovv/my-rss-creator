@@ -4,6 +4,7 @@ from datetime import datetime
 from urllib.parse import urlparse
 import requests
 import feedgenerator
+import ftfy
 
 def validate_xpath_selector(selector: str) -> tuple[bool, str | None]:
     """Validate an XPath selector."""
@@ -38,18 +39,19 @@ def find_description(title_element, description_xpath: str, tree, index: int) ->
     try:
         all_descriptions = tree.xpath(description_xpath)
         if index < len(all_descriptions):
-            return all_descriptions[index].text_content().strip()
+            text = all_descriptions[index].text_content().strip()
+            return ftfy.fix_text(text)
         
         if description_xpath.startswith('//'):
             relative_xpath = '.' + description_xpath
             desc_elements = title_element.xpath(relative_xpath)
             if desc_elements:
-                return desc_elements[0].text_content().strip()
+                return ftfy.fix_text(desc_elements[0].text_content().strip())
             
         following_xpath = f"following::{description_xpath[2:]}"
         desc_elements = title_element.xpath(following_xpath)
         if desc_elements:
-            return desc_elements[0].text_content().strip()
+            return ftfy.fix_text(desc_elements[0].text_content().strip())
             
     except Exception as e:
         print(f"Error finding description: {e}")
@@ -60,6 +62,7 @@ def create_rss_feed(url: str, title_xpath: str, description_xpath: str) -> str:
     """Generate RSS feed from webpage using XPath selectors."""
     try:
         response = requests.get(url)
+        response.encoding = 'utf-8'
         tree = html.fromstring(response.content)
         tree.make_links_absolute(url)
         
@@ -73,7 +76,7 @@ def create_rss_feed(url: str, title_xpath: str, description_xpath: str) -> str:
         title_elements = tree.xpath(title_xpath)
         
         for i, title_element in enumerate(title_elements):
-            title = title_element.text_content().strip()
+            title = ftfy.fix_text(title_element.text_content().strip())
             link = extract_link(title_element)
             
             if link:
