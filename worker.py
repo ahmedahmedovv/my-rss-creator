@@ -36,9 +36,11 @@ def update_feed(feed_data):
             print(f"Error updating feed {feed_data['url']}: {rss_content}")
             return False
             
-        # Create a stable filename that doesn't change
-        domain = urlparse(feed_data['url']).netloc
-        filename = f"{domain}.xml"  # Removed timestamp to keep filename constant
+        # Create a stable filename that includes both domain and path
+        parsed_url = urlparse(feed_data['url'])
+        domain = parsed_url.netloc
+        path = parsed_url.path.strip('/').replace('/', '_')
+        filename = f"{domain}_{path}.xml" if path else f"{domain}.xml"
         
         # If there's an existing file, delete it first
         try:
