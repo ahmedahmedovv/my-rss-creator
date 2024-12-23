@@ -477,8 +477,37 @@
         // Update the URL input handler to fetch selectors
         document.getElementById('url').addEventListener('change', (e) => {
             const url = e.target.value;
+            
+            // Reset form elements
+            document.getElementById('titleSelector').value = '';
+            document.getElementById('descriptionSelector').value = '';
+            
+            // Reset buttons
+            document.getElementById('generateButton').disabled = true;
+            document.getElementById('saveButton').disabled = true;
+            
+            // Reset preview section
+            document.getElementById('feedPreview').innerHTML = `
+                <div class="blankslate">
+                    <h3 class="blankslate-heading">No RSS Feed Generated Yet</h3>
+                    <p class="blankslate-text">Configure the selectors and click Generate Preview to see the preview here.</p>
+                </div>
+            `;
+            
+            // Hide saved feed container if visible
+            document.getElementById('savedFeedContainer').style.display = 'none';
+            
+            // Fetch new selectors if URL is provided
             if (url) {
                 fetchSelectors(url);
+            } else {
+                // Reset selector list if URL is empty
+                document.getElementById('selectorList').innerHTML = `
+                    <div class="blankslate">
+                        <h3 class="blankslate-heading">Enter a URL</h3>
+                        <p class="blankslate-text">Available selectors will appear here after you enter a URL.</p>
+                    </div>
+                `;
             }
         });
 
