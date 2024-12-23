@@ -59,13 +59,18 @@ def update_feed(feed_data):
             .from_('rss-feed-storage') \
             .get_public_url(filename)
             
-        # Update database with URL only if it's different
-        if feed_data.get('rss_file_url') != file_url:
-            supabase.table('rss_feeds') \
-                .update({'rss_file_url': file_url}) \
-                .eq('id', feed_data['id']) \
-                .execute()
+        # Add debug logging for URL comparison
+        print(f"Current URL in database: {feed_data.get('rss_file_url')}")
+        print(f"New generated URL: {file_url}")
+
+        # Modify the database update to ensure it executes and check the response
+        update_response = supabase.table('rss_feeds') \
+            .update({'rss_file_url': file_url}) \
+            .eq('id', feed_data['id']) \
+            .execute()
             
+        print(f"Database update response: {update_response}")
+        
         print(f"Successfully updated feed: {feed_data['url']}")
         return True
         
