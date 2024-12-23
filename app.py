@@ -17,6 +17,11 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import WebDriverException
 import time
+import urllib3
+import random
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 app = Flask(__name__)
 
@@ -183,36 +188,75 @@ def analyze_page_structure(tree) -> list[dict]:
     return selector_data
 
 def get_page_content(url, use_selenium=False):
-    """Fetch page content using either requests or Selenium."""
+    """Fetch page content using enhanced techniques from old.py"""
     if not use_selenium:
-        # Try regular requests first
+        # Initialize session with retry mechanism
+        session = requests.Session()
+        retries = urllib3.util.Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[500, 502, 503, 504]
+        )
+        session.mount('https://', requests.adapters.HTTPAdapter(max_retries=retries))
+        
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Cache-Control': 'max-age=0'
         }
-        response = requests.get(url, headers=headers, timeout=10)
-        return response.content
-
-    else:
-        # Use Selenium as fallback
-        chrome_options = Options()
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
         
         try:
-            driver = webdriver.Chrome(options=chrome_options)
-            driver.get(url)
-            # Wait for dynamic content to load
-            time.sleep(3)
-            content = driver.page_source
+            response = session.get(
+                url,
+                headers=headers,
+                verify=False,  # Similar to old.py
+                timeout=(10, 30),  # Connection timeout, Read timeout
+                allow_redirects=True
+            )
+            response.raise_for_status()
+            return response.content
+            
+        except requests.RequestException as e:
+            print(f"Regular request failed: {str(e)}")
+            # If regular request fails, try with Selenium
+            return get_page_content(url, use_selenium=True)
+    
+    # Enhanced Selenium configuration from old.py
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])
+    chrome_options.add_experimental_option('useAutomationExtension', False)
+    
+    try:
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(url)
+        
+        # Add random delay and scrolling like in old.py
+        total_height = int(driver.execute_script("return document.body.scrollHeight"))
+        for i in range(3):
+            scroll_height = random.randint(100, total_height)
+            driver.execute_script(f"window.scrollTo(0, {scroll_height});")
+            time.sleep(random.uniform(0.5, 2))
+        
+        # Wait for dynamic content
+        time.sleep(random.uniform(3, 5))
+        
+        content = driver.page_source
+        driver.quit()
+        return content.encode('utf-8')
+        
+    except WebDriverException as e:
+        if 'driver' in locals():
             driver.quit()
-            return content.encode('utf-8')
-        except WebDriverException as e:
-            driver.quit() if 'driver' in locals() else None
-            raise Exception(f"Selenium error: {str(e)}")
+        raise Exception(f"Selenium error: {str(e)}")
 
 # ---- Routes ----
 
