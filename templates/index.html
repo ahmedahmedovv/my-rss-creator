@@ -79,9 +79,9 @@
             </div>
 
             <!-- Preview -->
-            <div class="bg-white rounded-lg shadow p-6">
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[600px]">
                 <h2 class="text-xl font-semibold mb-4">Preview</h2>
-                <div id="feedPreview" class="space-y-4">
+                <div id="feedPreview" class="space-y-4 overflow-y-auto flex-1 pr-2">
                     <div class="text-center text-gray-500">
                         Configure selectors and generate preview to see results
                     </div>
@@ -233,6 +233,11 @@
         
         .overflow-y-auto::-webkit-scrollbar-thumb:hover {
             background-color: #94A3B8;
+        }
+
+        /* Add smooth scrolling to both containers */
+        #selectorList, #feedPreview {
+            scroll-behavior: smooth;
         }
     `;
     document.head.appendChild(style);
