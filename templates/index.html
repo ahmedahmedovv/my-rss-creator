@@ -4,708 +4,390 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RSS Generator</title>
-    <link href="https://unpkg.com/@primer/css@^20.2.4/dist/primer.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="color-bg-default">
-    <div class="container-fluid p-responsive py-3">
-        <h1 class="h1 text-center color-fg-default mb-3" style="font-size: 2rem;">RSS Generator</h1>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">RSS Generator</h1>
         
-        <div class="d-flex" style="gap: 2rem; height: calc(100vh - 100px);">
-            <!-- Left Panel: Input Form -->
-            <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
-                <div class="Box-header">
-                    <h2 class="Box-title text-center" style="font-size: 1.8rem;">
-                        <svg class="octicon mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                            <path d="M7.429 1.525a6.593 6.593 0 0 1 1.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 0 1 0 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 0 1-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 0 1-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 0 1-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 0 1-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 0 1 0-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 0 1 .573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 0 0-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 0 0-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 0 0 0 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 0 0 1.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 0 0 .668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 0 0 0-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 0 0-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 0 0-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 0 0 8 0zm1.5 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
-                        </svg>
-                        Configuration
-                    </h2>
-                </div>
-                <form id="rssForm" class="Box-body" style="flex: 1; overflow-y: auto;">
-                    <!-- Step 1: URL Input -->
-                    <div class="form-group mb-4">
-                        <div class="form-group-header">
-                            <h3 class="h4 color-fg-default" style="font-size: 1.5rem;">
-                                <svg class="octicon mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                    <path d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 0 1 0-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83 0z"></path>
-                                </svg>
-                                1. Enter Website URL
-                            </h3>
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Input Form -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <form id="rssForm">
+                    <!-- URL Input -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                        <input type="url" id="url" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="https://example.com">
+                    </div>
+
+                    <!-- Selectors -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Title XPath</label>
+                            <input type="text" id="titleSelector" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
-                        <div class="form-group-body">
-                            <input type="url" id="url" required 
-                                   class="form-control width-full"
-                                   style="font-size: 1.2rem; padding: 0.75rem;"
-                                   placeholder="https://example.com/blog">
-                            <p class="note" style="font-size: 1rem; margin-top: 0.5rem;">Enter the URL of the website you want to create an RSS feed for</p>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description XPath</label>
+                            <input type="text" id="descriptionSelector" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
 
-                    <!-- Step 2: Selector Configuration -->
-                    <div class="form-group mb-4">
-                        <div class="form-group-header">
-                            <h3 class="h4 color-fg-default" style="font-size: 1.5rem;">
-                                2. Configure Selectors
-                            </h3>
-                        </div>
-                        <div class="form-group-body">
-                            <div class="mb-3">
-                                <label class="form-label" style="font-size: 1.2rem;">
-                                    Title Selector (XPath)
-                                </label>
-                                <input type="text" id="titleSelector" required 
-                                       class="form-control"
-                                       style="font-size: 1.2rem; padding: 0.75rem;"
-                                       placeholder="">
-                            </div>
-                            <div>
-                                <label class="form-label" style="font-size: 1.2rem;">
-                                    Description Selector (XPath)
-                                </label>
-                                <input type="text" id="descriptionSelector" required 
-                                       class="form-control"
-                                       style="font-size: 1.2rem; padding: 0.75rem;"
-                                       placeholder="">
-                            </div>
-                        </div>
+                    <!-- Buttons -->
+                    <div class="mt-6 space-y-3">
+                        <button type="submit" id="generateButton" 
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                                disabled>
+                            Generate Preview
+                        </button>
+                        <button type="button" id="saveButton" onclick="saveFeed()" 
+                                class="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                                disabled>
+                            Create RSS Link
+                        </button>
                     </div>
 
-                    <div class="d-flex flex-column gap-2">
-                        <div class="BtnGroup d-flex">
-                            <button type="submit" id="generateButton" class="btn btn-primary flex-1 BtnGroup-item" 
-                                    style="font-size: 1.3rem; padding: 1rem; height: auto;"
-                                    disabled>
-                                <span id="generateButtonText">Generate Preview</span>
-                                <span id="generateButtonLoading" style="display: none;">
-                                    <span class="AnimatedEllipsis"></span>
-                                    Generating...
-                                </span>
-                            </button>
-                            <button type="button" id="saveButton" onclick="saveFeed()" 
-                                    class="btn btn-outline flex-1 BtnGroup-item" 
-                                    style="font-size: 1.3rem; padding: 1rem; height: auto;"
-                                    disabled>
-                                <span id="saveButtonText">Create RSS Link</span>
-                                <span id="saveButtonLoading" style="display: none;">
-                                    <span class="AnimatedEllipsis"></span>
-                                    Creating...
-                                </span>
-                            </button>
-                        </div>
-                        
-                        <!-- Move the saved feed container here, after the buttons -->
-                        <div id="savedFeedContainer" class="mt-3" style="display: none;">
-                            <div class="flash flash-success">
-                                <p class="mb-1">Feed saved successfully!</p>
-                                <div class="d-flex">
-                                    <input type="text" id="savedFeedUrl" readonly class="form-control flex-1" />
-                                    <button type="button" onclick="copySavedUrl(event)" class="btn ml-2">Copy URL</button>
-                                </div>
+                    <!-- Success Message -->
+                    <div id="savedFeedContainer" class="hidden mt-4">
+                        <div class="bg-green-50 border border-green-200 rounded-md p-4">
+                            <p class="text-green-700 mb-2">Feed saved successfully!</p>
+                            <div class="flex gap-2">
+                                <input type="text" id="savedFeedUrl" readonly 
+                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-md">
+                                <button type="button" onclick="copySavedUrl(event)"
+                                        class="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                                    Copy
+                                </button>
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
 
-            <!-- Middle Panel: XPath Selector List -->
-            <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
-                <div class="Box-header">
-                    <h2 class="Box-title text-center" style="font-size: 1.8rem;">Available Selectors</h2>
-                </div>
-                <div class="Box-body" style="flex: 1; overflow-y: auto;">
-                    <div id="selectorList" class="Box">
-                        <div class="blankslate">
-                            <h3 class="blankslate-heading">Enter a URL</h3>
-                            <p class="blankslate-text">Available selectors will appear here after you enter a URL.</p>
-                        </div>
+            <!-- Selector List -->
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[600px]">
+                <h2 class="text-xl font-semibold mb-4">Available Selectors</h2>
+                <div id="selectorList" class="space-y-4 overflow-y-auto flex-1 pr-2">
+                    <div class="text-center text-gray-500">
+                        Enter a URL to see available selectors
                     </div>
                 </div>
             </div>
 
-            <!-- Right Panel: Preview -->
-            <div class="Box color-shadow-large" style="flex: 1; display: flex; flex-direction: column;">
-                <div class="Box-header">
-                    <h2 class="Box-title text-center" style="font-size: 1.8rem;">Preview</h2>
-                </div>
-                <div id="result" class="Box-body" style="flex: 1; overflow-y: auto;">
-                    <div id="feedPreview" class="Box p-3 color-bg-subtle">
-                        <div class="blankslate">
-                            <h3 class="blankslate-heading">No RSS Feed Generated Yet</h3>
-                            <p class="blankslate-text">Configure the selectors and click Generate Preview to see the preview here.</p>
-                        </div>
+            <!-- Preview -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Preview</h2>
+                <div id="feedPreview" class="space-y-4">
+                    <div class="text-center text-gray-500">
+                        Configure selectors and generate preview to see results
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Keep existing JavaScript but remove style tag -->
     <script>
-        function copyRssUrl() {
-            const currentUrl = window.location.href;
-            const url = document.getElementById('url').value;
-            const titleSelector = document.getElementById('titleSelector').value;
-            const descriptionSelector = document.getElementById('descriptionSelector').value;
-            
-            const rssUrl = `${currentUrl}generate_rss?url=${encodeURIComponent(url)}&title_selector=${encodeURIComponent(titleSelector)}&description_selector=${encodeURIComponent(descriptionSelector)}`;
-            
-            navigator.clipboard.writeText(rssUrl)
-                .then(() => alert('RSS URL copied to clipboard!'))
-                .catch(err => alert('Failed to copy URL: ' + err));
-        }
+    document.getElementById('url').addEventListener('input', debounce(async function(e) {
+        const url = e.target.value;
+        if (!url) return;
 
-        function parseXMLtoHTML(xmlString) {
-            const parser = new DOMParser();
-            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-            const items = xmlDoc.getElementsByTagName("item");
-            let html = '';
+        const selectorList = document.getElementById('selectorList');
+        
+        // Show loading state
+        selectorList.innerHTML = `
+            <div class="flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span class="ml-3 text-gray-600">Analyzing page structure...</span>
+            </div>
+        `;
 
-            for (let item of items) {
-                const title = item.getElementsByTagName("title")[0]?.textContent || 'No title';
-                const link = item.getElementsByTagName("link")[0]?.textContent || '#';
-                const description = item.getElementsByTagName("description")[0]?.textContent || 'No description';
+        try {
+            const response = await fetch('/get_selectors', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url })
+            });
 
-                html += `
-                    <div class="border-bottom color-border-muted py-3 last:border-bottom-0">
-                        <h4 class="h5 color-fg-default mb-1">
-                            <a href="${link}" target="_blank" class="color-fg-accent">
-                                ${title}
-                            </a>
-                        </h4>
-                        <p class="color-fg-muted mb-0">${description}</p>
-                    </div>
-                `;
-            }
+            const data = await response.json();
+            console.log('Selector Response:', data);
 
-            return html || '<div class="color-fg-muted">No items found in feed</div>';
-        }
-
-        // Replace the CSS selector validation with XPath validation
-        function isValidXPathSelector(selector) {
-            try {
-                document.evaluate(selector, document, null, XPathResult.ANY_TYPE, null);
-                return true;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        function validateForm() {
-            const url = document.getElementById('url').value;
-            const titleSelector = document.getElementById('titleSelector').value;
-            const descriptionSelector = document.getElementById('descriptionSelector').value;
-            
-            const isValid = url && 
-                           titleSelector && 
-                           descriptionSelector && 
-                           isValidXPathSelector(titleSelector) && 
-                           isValidXPathSelector(descriptionSelector);
-            
-            // Only enable the Generate Preview button based on form validation
-            document.getElementById('generateButton').disabled = !isValid;
-            // Always keep Create RSS Link button disabled until preview is generated
-            document.getElementById('saveButton').disabled = true;
-        }
-
-        // Update existing input event listeners
-        document.getElementById('url').addEventListener('input', validateForm);
-        document.getElementById('titleSelector').addEventListener('input', function(e) {
-            const input = e.target;
-            const selector = input.value;
-            
-            if (selector && !isValidXPathSelector(selector)) {
-                input.setCustomValidity('Invalid XPath selector');
-                input.classList.add('border-red-500');
-                
-                let errorMsg = input.parentNode.querySelector('.error-message');
-                if (!errorMsg) {
-                    errorMsg = document.createElement('p');
-                    errorMsg.className = 'error-message text-red-500 text-sm mt-1';
-                    input.parentNode.appendChild(errorMsg);
-                }
-                errorMsg.textContent = 'Please enter a valid XPath selector';
-            } else {
-                input.setCustomValidity('');
-                input.classList.remove('border-red-500');
-                
-                const errorMsg = input.parentNode.querySelector('.error-message');
-                if (errorMsg) {
-                    errorMsg.remove();
-                }
-            }
-            validateForm();
-        });
-
-        document.getElementById('descriptionSelector').addEventListener('input', function(e) {
-            const input = e.target;
-            const selector = input.value;
-            
-            if (selector && !isValidXPathSelector(selector)) {
-                input.setCustomValidity('Invalid XPath selector');
-                input.classList.add('border-red-500');
-                
-                let errorMsg = input.parentNode.querySelector('.error-message');
-                if (!errorMsg) {
-                    errorMsg = document.createElement('p');
-                    errorMsg.className = 'error-message text-red-500 text-sm mt-1';
-                    input.parentNode.appendChild(errorMsg);
-                }
-                errorMsg.textContent = 'Please enter a valid XPath selector';
-            } else {
-                input.setCustomValidity('');
-                input.classList.remove('border-red-500');
-                
-                const errorMsg = input.parentNode.querySelector('.error-message');
-                if (errorMsg) {
-                    errorMsg.remove();
-                }
-            }
-            validateForm();
-        });
-
-        // Add helper functions for button states
-        function setButtonLoading(buttonId, isLoading) {
-            const button = document.getElementById(buttonId);
-            const textSpan = document.getElementById(`${buttonId}Text`);
-            const loadingSpan = document.getElementById(`${buttonId}Loading`);
-            
-            button.disabled = isLoading;
-            textSpan.style.display = isLoading ? 'none' : 'inline';
-            loadingSpan.style.display = isLoading ? 'inline' : 'none';
-        }
-
-        // Update form submission handler
-        document.getElementById('rssForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            // Show loading state
-            setButtonLoading('generateButton', true);
-            
-            const data = {
-                url: document.getElementById('url').value,
-                title_selector: document.getElementById('titleSelector').value,
-                description_selector: document.getElementById('descriptionSelector').value
-            };
-            
-            try {
-                const response = await fetch('/generate_rss', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (result.error) {
-                    throw new Error(result.error);
-                }
-                
-                const resultDiv = document.getElementById('result');
-                resultDiv.classList.remove('hidden');
-                
-                const feedPreview = document.getElementById('feedPreview');
-                feedPreview.innerHTML = parseXMLtoHTML(result.rss_content);
-                
-                // Enable save button after successful preview
-                document.getElementById('saveButton').disabled = false;
-                
-            } catch (error) {
-                alert('Error generating RSS feed: ' + error.message);
-                document.getElementById('saveButton').disabled = true;
-            } finally {
-                // Reset loading state
-                setButtonLoading('generateButton', false);
-            }
-        });
-
-        let allSelectors = [];
-
-        function togglePanel() {
-            const panel = document.getElementById('selectorPanel');
-            panel.classList.toggle('translate-x-full');
-        }
-
-        async function fetchSelectors(url) {
-            try {
-                // Show loading state in selector list
-                const container = document.getElementById('selectorList');
-                container.innerHTML = `
-                    <div class="blankslate">
-                        <h3 class="blankslate-heading">Loading selectors...</h3>
-                        <p class="blankslate-text">First attempting regular request, if that fails we'll try with browser automation...</p>
-                        <div class="AnimatedEllipsis"></div>
-                    </div>
-                `;
-                
-                const response = await fetch('/get_selectors', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        url,
-                        // Add options for more control
-                        options: {
-                            timeout: 15000, // 15 seconds timeout
-                            forceSelenium: false, // Let server decide
-                            waitTime: 5000 // Wait 5 seconds for dynamic content
+            if (data.error) {
+                selectorList.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-red-600 font-medium">${data.error}</p>
+                        ${data.details ? 
+                            `<ul class="list-disc pl-5 mt-2 text-sm text-red-500">
+                                ${data.details.map(d => `<li>${d}</li>`).join('')}
+                            </ul>` 
+                            : ''
                         }
-                    })
-                });
+                    </div>
+                `;
+                return;
+            }
+
+            selectorList.innerHTML = data.selectors.map(selector => {
+                // Escape the XPath string for safe usage in HTML attributes
+                const escapedXPath = selector.xpath.replace(/'/g, '&apos;').replace(/"/g, '&quot;');
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.error) {
-                    // Enhanced error display with manual selector input option
-                    container.innerHTML = `
-                        <div class="blankslate">
-                            <h3 class="blankslate-heading">Unable to fetch selectors</h3>
-                            <p class="blankslate-text">${data.error}</p>
-                            ${data.details ? `
-                                <ul class="list-style-none mt-2">
-                                    ${data.details.map(detail => `
-                                        <li class="text-small color-fg-muted mb-1">• ${detail}</li>
-                                    `).join('')}
-                                </ul>
-                            ` : ''}
-                            <div class="mt-4 border-top color-border-muted pt-3">
-                                <h4 class="h5 mb-2">Manual XPath Input Guide:</h4>
-                                <p class="text-small color-fg-muted mb-2">You can manually enter XPath selectors:</p>
-                                <ul class="list-style-none text-small color-fg-muted">
-                                    <li>• For titles: <code>//h1</code> or <code>//div[@class='title']</code></li>
-                                    <li>• For content: <code>//div[@class='content']</code> or <code>//article//p</code></li>
-                                </ul>
-                                <button onclick="showXPathHelper()" class="btn btn-sm btn-outline mt-2">
-                                    Show XPath Helper
-                                </button>
-                            </div>
-                            <div class="mt-3">
-                                <button onclick="retryWithSelenium('${url}')" class="btn btn-sm">
-                                    Retry with Browser Automation
-                                </button>
-                            </div>
+                return `
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center justify-between mb-3">
+                            <button onclick="useSelector(\`${escapedXPath}\`)" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium truncate max-w-[80%] text-left">
+                                ${selector.css}
+                            </button>
+                            <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                                ${selector.example} matches
+                            </span>
                         </div>
-                    `;
-                    return;
-                }
-                
-                allSelectors = data.selectors;
-                displaySelectors(allSelectors);
-                
-            } catch (error) {
-                const container = document.getElementById('selectorList');
-                container.innerHTML = `
-                    <div class="blankslate">
-                        <h3 class="blankslate-heading">Error</h3>
-                        <p class="blankslate-text">Failed to fetch selectors: ${error.message}</p>
-                        <div class="mt-4 border-top color-border-muted pt-3">
-                            <h4 class="h5 mb-2">Troubleshooting Steps:</h4>
-                            <ul class="list-style-none text-small color-fg-muted">
-                                <li>• Check if the URL is accessible in your browser</li>
-                                <li>• Verify if the site requires authentication</li>
-                                <li>• Try using manual XPath selectors</li>
+                        <div class="text-sm text-gray-600">
+                            <p class="font-medium mb-1">Examples:</p>
+                            <ul class="space-y-2">
+                                ${selector.samples.map(sample => `
+                                    <li class="bg-gray-50 p-2 rounded border border-gray-100 hover:border-gray-200 transition-colors">
+                                        ${sample}
+                                    </li>
+                                `).join('')}
                             </ul>
                         </div>
-                        <div class="mt-3">
-                            <button onclick="retryWithSelenium('${url}')" class="btn btn-sm">
-                                Retry with Browser Automation
+                        <div class="mt-3 flex gap-2">
+                            <button onclick="useSelector(\`${escapedXPath}\`)" 
+                                    class="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors">
+                                Use as Title
+                            </button>
+                            <button onclick="useAsDescription(\`${escapedXPath}\`)" 
+                                    class="text-xs bg-green-50 text-green-600 px-3 py-1 rounded-full hover:bg-green-100 transition-colors">
+                                Use as Description
                             </button>
                         </div>
                     </div>
                 `;
-            }
-        }
+            }).join('');
 
-        function displaySelectors(selectors) {
-            const sortedSelectors = selectors.sort((a, b) => {
-                const aCount = parseInt(a.example);
-                const bCount = parseInt(b.example);
-                return bCount - aCount;
-            });
-
-            const baseUrl = document.getElementById('url').value;
-            const container = document.getElementById('selectorList');
-            container.innerHTML = sortedSelectors.map(selector => `
-                <div class="Box-row">
-                    <div class="d-flex flex-justify-between mb-2">
-                        <code class="color-fg-accent">${selector.css}</code>
-                        <span class="Label">${selector.example} matches</span>
-                    </div>
-                    
-                    <div class="color-fg-muted f6 mb-2">
-                        <code>${selector.xpath}</code>
-                    </div>
-                    
-                    <div class="color-bg-subtle p-2 mb-2 rounded-2">
-                        <ul class="list-style-none" style="margin-bottom: 0;">
-                            ${selector.samples.map((sample, index) => {
-                                // Try to find href in the sample if it's an HTML string
-                                let href = baseUrl;
-                                if (sample.includes('href="')) {
-                                    const hrefMatch = sample.match(/href="([^"]+)"/);
-                                    if (hrefMatch) {
-                                        href = hrefMatch[1];
-                                        // Make relative URLs absolute
-                                        if (!href.startsWith('http')) {
-                                            href = new URL(href, baseUrl).href;
-                                        }
-                                    }
-                                }
-                                
-                                // Clean the sample text from HTML tags
-                                const cleanSample = sample.replace(/<[^>]+>/g, '');
-                                
-                                return `
-                                    <li class="f6 color-fg-muted mb-1">
-                                        <span class="text-bold mr-2">•</span>${cleanSample}
-                                        <br>
-                                        <a href="${href}" 
-                                           class="ml-4 Link--secondary text-small" 
-                                           target="_blank"
-                                           onclick="return highlightElement('${selector.xpath}', ${index})">
-                                            ${href}
-                                        </a>
-                                    </li>
-                                `;
-                            }).join('')}
-                        </ul>
-                    </div>
-                    
-                    <div class="d-flex flex-wrap gap-2">
-                        <button onclick="useSelector('${selector.css}', 'title')" 
-                                class="btn btn-sm btn-success">Use as Title</button>
-                        <button onclick="useSelector('${selector.css}', 'description')" 
-                                class="btn btn-sm btn-outline">Use as Description</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Add this new function to handle element highlighting
-        function highlightElement(xpath, index) {
-            const url = document.getElementById('url').value;
-            const highlightScript = `
-                const elements = document.evaluate('${xpath}', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                if (elements.snapshotLength > ${index}) {
-                    const element = elements.snapshotItem(${index});
-                    element.style.outline = '3px solid #4f46e5';
-                    element.style.backgroundColor = 'rgba(79, 70, 229, 0.1)';
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            `;
-            
-            // Open in new window and inject highlighting script
-            const newWindow = window.open(url, '_blank');
-            newWindow.addEventListener('load', () => {
-                newWindow.eval(highlightScript);
-            });
-            
-            return false; // Prevent default link behavior
-        }
-
-        // Update the useSelector function to use XPath
-        function useSelector(selector, type) {
-            const input = document.getElementById(type === 'title' ? 'titleSelector' : 'descriptionSelector');
-            // Convert CSS selector to XPath using the server response
-            const selectorData = allSelectors.find(s => s.css === selector);
-            if (selectorData) {
-                input.value = selectorData.xpath;
-                input.dispatchEvent(new Event('input'));
-            }
-        }
-
-        // Update the URL input handler to fetch selectors
-        document.getElementById('url').addEventListener('change', (e) => {
-            const url = e.target.value;
-            
-            // Reset form elements
-            document.getElementById('titleSelector').value = '';
-            document.getElementById('descriptionSelector').value = '';
-            
-            // Reset buttons
-            document.getElementById('generateButton').disabled = true;
-            document.getElementById('saveButton').disabled = true;
-            
-            // Reset preview section
-            document.getElementById('feedPreview').innerHTML = `
-                <div class="blankslate">
-                    <h3 class="blankslate-heading">No RSS Feed Generated Yet</h3>
-                    <p class="blankslate-text">Configure the selectors and click Generate Preview to see the preview here.</p>
+        } catch (error) {
+            console.error('Error fetching selectors:', error);
+            selectorList.innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p class="text-red-600 font-medium">Error fetching selectors</p>
+                    <p class="text-sm text-red-500 mt-1">Please try again or check the console for details.</p>
                 </div>
             `;
-            
-            // Hide saved feed container if visible
-            document.getElementById('savedFeedContainer').style.display = 'none';
-            
-            // Fetch new selectors if URL is provided
-            if (url) {
-                fetchSelectors(url);
-            } else {
-                // Reset selector list if URL is empty
-                document.getElementById('selectorList').innerHTML = `
-                    <div class="blankslate">
-                        <h3 class="blankslate-heading">Enter a URL</h3>
-                        <p class="blankslate-text">Available selectors will appear here after you enter a URL.</p>
+        }
+    }, 500));
+
+    // Debounce function to prevent too many requests
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    function useSelector(xpath) {
+        document.getElementById('titleSelector').value = xpath;
+        document.getElementById('generateButton').disabled = 
+            !document.getElementById('titleSelector').value || 
+            !document.getElementById('descriptionSelector').value;
+    }
+
+    function useAsDescription(xpath) {
+        document.getElementById('descriptionSelector').value = xpath;
+        document.getElementById('generateButton').disabled = 
+            !document.getElementById('titleSelector').value || 
+            !document.getElementById('descriptionSelector').value;
+    }
+
+    // Add custom scrollbar styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .overflow-y-auto {
+            scrollbar-width: thin;
+            scrollbar-color: #CBD5E1 transparent;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+            background-color: #CBD5E1;
+            border-radius: 3px;
+        }
+        
+        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background-color: #94A3B8;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Handle form submission for preview generation
+    document.getElementById('rssForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const url = document.getElementById('url').value;
+        const titleSelector = document.getElementById('titleSelector').value;
+        const descriptionSelector = document.getElementById('descriptionSelector').value;
+        const previewContainer = document.getElementById('feedPreview');
+        const generateButton = document.getElementById('generateButton');
+        const saveButton = document.getElementById('saveButton');
+        
+        // Show loading state
+        generateButton.disabled = true;
+        previewContainer.innerHTML = `
+            <div class="flex items-center justify-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span class="ml-3 text-gray-600">Generating preview...</span>
+            </div>
+        `;
+
+        try {
+            const response = await fetch('/generate_rss', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    url,
+                    title_selector: titleSelector,
+                    description_selector: descriptionSelector
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                previewContainer.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <p class="text-red-600 font-medium">Error generating preview</p>
+                        <p class="text-sm text-red-500 mt-1">${data.error}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Parse the RSS content to display it nicely
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data.rss_content, "text/xml");
+            const items = xmlDoc.getElementsByTagName("item");
+
+            let previewHtml = `
+                <div class="space-y-4">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <p class="text-blue-800 font-medium">Preview of first ${Math.min(3, items.length)} items</p>
+                    </div>
+            `;
+
+            // Display first 3 items
+            for (let i = 0; i < Math.min(3, items.length); i++) {
+                const item = items[i];
+                const title = item.getElementsByTagName("title")[0]?.textContent || 'No title';
+                const description = item.getElementsByTagName("description")[0]?.textContent || 'No description';
+                const link = item.getElementsByTagName("link")[0]?.textContent || '#';
+
+                previewHtml += `
+                    <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                        <h3 class="font-medium text-lg mb-2">
+                            <a href="${link}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                ${title}
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 text-sm">${description}</p>
                     </div>
                 `;
             }
-        });
 
-        // Add preview functionality
-        function previewSelector(selector) {
-            // Remove any existing highlights
-            document.querySelectorAll('.selector-highlight').forEach(el => {
-                el.classList.remove('selector-highlight');
-            });
+            previewHtml += '</div>';
+            previewContainer.innerHTML = previewHtml;
             
-            // Add highlight class to matching elements
-            try {
-                document.querySelectorAll(selector).forEach(el => {
-                    el.classList.add('selector-highlight');
-                    
-                    // Scroll first element into view
-                    if (el === document.querySelector(selector)) {
-                        el.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-                    }
-                });
-                
-                // Remove highlights after 2 seconds
-                setTimeout(() => {
-                    document.querySelectorAll('.selector-highlight').forEach(el => {
-                        el.classList.remove('selector-highlight');
-                    });
-                }, 2000);
-            } catch (e) {
-                console.error('Invalid selector:', e);
-            }
-        }
+            // Enable save button after successful preview
+            saveButton.disabled = false;
 
-        // Add CSS for highlighting
-        const style = document.createElement('style');
-        style.textContent = `
-            .selector-highlight {
-                outline: 3px solid #4f46e5 !important; /* indigo-600 */
-                background-color: rgba(79, 70, 229, 0.1) !important;
-                transition: all 0.3s ease-in-out !important;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Update save feed function
-        async function saveFeed() {
-            setButtonLoading('saveButton', true);
-            
-            const data = {
-                url: document.getElementById('url').value,
-                title_selector: document.getElementById('titleSelector').value,
-                description_selector: document.getElementById('descriptionSelector').value
-            };
-            
-            try {
-                const response = await fetch('/save_feed', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (result.error) {
-                    throw new Error(result.error);
-                }
-                
-                const container = document.getElementById('savedFeedContainer');
-                const urlInput = document.getElementById('savedFeedUrl');
-                container.style.display = 'block';
-                urlInput.value = result.rss_url;
-                
-            } catch (error) {
-                alert('Error saving feed: ' + error.message);
-            } finally {
-                setButtonLoading('saveButton', false);
-            }
-        }
-
-        function copySavedUrl(event) {
-            event.preventDefault();  // Prevent any form submission
-            event.stopPropagation();  // Stop event bubbling
-            
-            const urlInput = document.getElementById('savedFeedUrl');
-            urlInput.select();
-            document.execCommand('copy');
-            
-            // Simple success feedback
-            const copyBtn = event.target;
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy URL';
-            }, 2000);
-        }
-
-        // Add new helper functions
-        function retryWithSelenium(url) {
-            fetchSelectors(url, true);
-        }
-
-        function showXPathHelper() {
-            const container = document.getElementById('selectorList');
-            container.innerHTML += `
-                <div class="Box mt-3">
-                    <div class="Box-header">
-                        <h3 class="Box-title">XPath Quick Reference</h3>
-                    </div>
-                    <div class="Box-body">
-                        <h4 class="mb-2">Common XPath Patterns:</h4>
-                        <ul class="list-style-none mb-3">
-                            <li><code>//article//h1</code> - Find h1 inside article</li>
-                            <li><code>//div[@class="content"]</code> - Find div with class "content"</li>
-                            <li><code>//div[contains(@class, "title")]</code> - Find div with class containing "title"</li>
-                        </ul>
-                        <button onclick="testXPath()" class="btn btn-sm">
-                            Test XPath
-                        </button>
-                    </div>
+        } catch (error) {
+            console.error('Error generating preview:', error);
+            previewContainer.innerHTML = `
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <p class="text-red-600 font-medium">Error generating preview</p>
+                    <p class="text-sm text-red-500 mt-1">Please try again or check the console for details.</p>
                 </div>
             `;
+        } finally {
+            generateButton.disabled = false;
         }
+    });
 
-        // Add XPath testing functionality
-        function testXPath() {
-            const xpath = prompt("Enter XPath to test:");
-            if (xpath) {
-                const titleInput = document.getElementById('titleSelector');
-                titleInput.value = xpath;
-                titleInput.dispatchEvent(new Event('input'));
+    // Add save feed functionality
+    async function saveFeed() {
+        const url = document.getElementById('url').value;
+        const titleSelector = document.getElementById('titleSelector').value;
+        const descriptionSelector = document.getElementById('descriptionSelector').value;
+        const saveButton = document.getElementById('saveButton');
+        const savedFeedContainer = document.getElementById('savedFeedContainer');
+        
+        saveButton.disabled = true;
+        
+        try {
+            const response = await fetch('/save_feed', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    url,
+                    title_selector: titleSelector,
+                    description_selector: descriptionSelector
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                alert('Error saving feed: ' + data.error);
+                return;
             }
+
+            // Show success message and RSS URL
+            savedFeedContainer.classList.remove('hidden');
+            document.getElementById('savedFeedUrl').value = data.rss_url;
+
+        } catch (error) {
+            console.error('Error saving feed:', error);
+            alert('Error saving feed. Please try again.');
+        } finally {
+            saveButton.disabled = false;
         }
+    }
+
+    // Add copy URL functionality
+    function copySavedUrl(event) {
+        const urlInput = document.getElementById('savedFeedUrl');
+        urlInput.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+            button.textContent = originalText;
+        }, 2000);
+    }
     </script>
-
-    <style>
-        /* Add loading animation styles */
-        .AnimatedEllipsis {
-            display: inline-block;
-            animation: ellipsis 1.5s infinite;
-            margin-right: 4px;
-        }
-
-        @keyframes ellipsis {
-            0% { content: ''; }
-            25% { content: '.'; }
-            50% { content: '..'; }
-            75% { content: '...'; }
-            100% { content: ''; }
-        }
-    </style>
 </body>
 </html>

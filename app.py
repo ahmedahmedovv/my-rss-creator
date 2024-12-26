@@ -330,11 +330,22 @@ def fetch_selectors():
         if not url:
             return jsonify({'error': 'URL is required'}), 400
 
+        # Add URL validation
+        if not url.startswith(('http://', 'https://')):
+            url = 'https://' + url
+
+        print(f"Fetching selectors for URL: {url}")  # Debug log
+
         # Try regular requests first
         try:
             content = get_page_content(url, use_selenium=False)
+            print(f"Content length: {len(content)}")  # Debug log
+            
             tree = html.fromstring(content)
+            tree.make_links_absolute(url)  # Make all links absolute
+            
             selectors = analyze_page_structure(tree)
+            print(f"Found {len(selectors)} selectors")  # Debug log
             
             if selectors:
                 # Fix encoding in selector samples
@@ -342,6 +353,8 @@ def fetch_selectors():
                     selector['samples'] = [ftfy.fix_text(sample) for sample in selector['samples']]
                 
                 return jsonify({'selectors': selectors})
+            else:
+                print("No selectors found with regular request, trying Selenium...")
                 
         except Exception as e:
             print(f"Regular request failed: {str(e)}")
@@ -349,12 +362,17 @@ def fetch_selectors():
         # If regular request fails or finds no selectors, try with Selenium
         try:
             content = get_page_content(url, use_selenium=True)
+            print(f"Selenium content length: {len(content)}")  # Debug log
+            
             tree = html.fromstring(content)
+            tree.make_links_absolute(url)
+            
             selectors = analyze_page_structure(tree)
+            print(f"Found {len(selectors)} selectors with Selenium")  # Debug log
             
             if not selectors:
                 return jsonify({
-                    'error': 'No suitable selectors found. This might be due to:',
+                    'error': 'No suitable selectors found',
                     'details': [
                         'Website blocking automated access',
                         'Content protected behind authentication',
@@ -370,6 +388,7 @@ def fetch_selectors():
             return jsonify({'selectors': selectors})
             
         except Exception as e:
+            print(f"Selenium request failed: {str(e)}")  # Debug log
             return jsonify({
                 'error': 'Failed to access the website',
                 'details': [
@@ -380,6 +399,7 @@ def fetch_selectors():
             }), 400
 
     except Exception as e:
+        print(f"Server error: {str(e)}")  # Debug log
         return jsonify({'error': f'Server error: {str(e)}'}), 500
 
 @app.route('/save_feed', methods=['POST'])
