@@ -153,9 +153,8 @@ def analyze_page_structure(tree) -> list[dict]:
             xpath = translator.css_to_xpath(selector)
             matching_elements = tree.xpath(xpath)
             
-            # Filter out elements with no meaningful content or navigation text
             content_elements = []
-            seen_texts = set()  # To track duplicate content
+            seen_texts = set()
             
             for el in matching_elements:
                 text = ' '.join(el.text_content().split()).strip()
@@ -165,18 +164,35 @@ def analyze_page_structure(tree) -> list[dict]:
                     el.tag not in excluded_tags and 
                     text_lower not in excluded_text_patterns and
                     text not in seen_texts and
-                    len(text) > 5):  # Ignore very short text
+                    len(text) > 5):
                     
-                    content_elements.append(el)
+                    # Get the href attribute - either from the element itself or its parent/child a tag
+                    href = None
+                    if el.tag == 'a':
+                        href = el.get('href')
+                    elif el.getparent() is not None and el.getparent().tag == 'a':
+                        href = el.getparent().get('href')
+                    else:
+                        # Look for nested a tag
+                        a_tag = el.find('.//a')
+                        if a_tag is not None:
+                            href = a_tag.get('href')
+                    
+                    content_elements.append({
+                        'text': text,
+                        'href': href
+                    })
                     seen_texts.add(text)
             
             if len(content_elements) >= 3:
-                content_samples = [
-                    ' '.join(el.text_content().split())[:100]
-                    for el in content_elements[:3]
-                ]
+                content_samples = []
+                for el in content_elements[:3]:
+                    sample_html = el['text'][:100]
+                    if el['href']:
+                        sample_html = f'<a href="{el["href"]}">{sample_html}</a>'
+                    content_samples.append(sample_html)
                 
-                if content_samples and len(set(content_samples)) >= 2:  # Ensure at least 2 unique samples
+                if content_samples and len(set(content_samples)) >= 2:
                     selector_data.append({
                         'css': selector,
                         'xpath': xpath,

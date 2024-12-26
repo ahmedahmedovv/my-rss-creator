@@ -423,14 +423,13 @@
         }
 
         function displaySelectors(selectors) {
-            // Sort selectors by example count (higher numbers first)
             const sortedSelectors = selectors.sort((a, b) => {
-                // Convert "X matches" string to number
                 const aCount = parseInt(a.example);
                 const bCount = parseInt(b.example);
-                return bCount - aCount;  // Sort in descending order
+                return bCount - aCount;
             });
 
+            const baseUrl = document.getElementById('url').value;
             const container = document.getElementById('selectorList');
             container.innerHTML = sortedSelectors.map(selector => `
                 <div class="Box-row">
@@ -445,11 +444,36 @@
                     
                     <div class="color-bg-subtle p-2 mb-2 rounded-2">
                         <ul class="list-style-none" style="margin-bottom: 0;">
-                            ${selector.samples.map(sample => `
-                                <li class="f6 color-fg-muted mb-1">
-                                    <span class="text-bold mr-2">•</span>${sample}
-                                </li>
-                            `).join('')}
+                            ${selector.samples.map((sample, index) => {
+                                // Try to find href in the sample if it's an HTML string
+                                let href = baseUrl;
+                                if (sample.includes('href="')) {
+                                    const hrefMatch = sample.match(/href="([^"]+)"/);
+                                    if (hrefMatch) {
+                                        href = hrefMatch[1];
+                                        // Make relative URLs absolute
+                                        if (!href.startsWith('http')) {
+                                            href = new URL(href, baseUrl).href;
+                                        }
+                                    }
+                                }
+                                
+                                // Clean the sample text from HTML tags
+                                const cleanSample = sample.replace(/<[^>]+>/g, '');
+                                
+                                return `
+                                    <li class="f6 color-fg-muted mb-1">
+                                        <span class="text-bold mr-2">•</span>${cleanSample}
+                                        <br>
+                                        <a href="${href}" 
+                                           class="ml-4 Link--secondary text-small" 
+                                           target="_blank"
+                                           onclick="return highlightElement('${selector.xpath}', ${index})">
+                                            ${href}
+                                        </a>
+                                    </li>
+                                `;
+                            }).join('')}
                         </ul>
                     </div>
                     
@@ -461,6 +485,28 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        // Add this new function to handle element highlighting
+        function highlightElement(xpath, index) {
+            const url = document.getElementById('url').value;
+            const highlightScript = `
+                const elements = document.evaluate('${xpath}', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                if (elements.snapshotLength > ${index}) {
+                    const element = elements.snapshotItem(${index});
+                    element.style.outline = '3px solid #4f46e5';
+                    element.style.backgroundColor = 'rgba(79, 70, 229, 0.1)';
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            `;
+            
+            // Open in new window and inject highlighting script
+            const newWindow = window.open(url, '_blank');
+            newWindow.addEventListener('load', () => {
+                newWindow.eval(highlightScript);
+            });
+            
+            return false; // Prevent default link behavior
         }
 
         // Update the useSelector function to use XPath
