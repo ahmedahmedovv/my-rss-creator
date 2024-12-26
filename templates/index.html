@@ -7,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <div class="container mx-auto px-4 py-8">
+    <div class="max-w-[1920px] mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold text-center mb-8">RSS Generator</h1>
         
         <!-- Main Grid Layout -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Input Form -->
-            <div class="bg-white rounded-lg shadow p-6">
+            <div class="bg-white rounded-lg shadow p-6 max-w-xl mx-auto lg:mx-0 w-full">
                 <form id="rssForm">
                     <!-- URL Input -->
                     <div class="mb-6">
@@ -69,7 +69,7 @@
             </div>
 
             <!-- Selector List -->
-            <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[600px]">
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[700px]">
                 <h2 class="text-xl font-semibold mb-4">Available Selectors</h2>
                 <div id="selectorList" class="space-y-4 overflow-y-auto flex-1 pr-2">
                     <div class="text-center text-gray-500">
@@ -79,7 +79,7 @@
             </div>
 
             <!-- Preview -->
-            <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[600px]">
+            <div class="bg-white rounded-lg shadow p-6 flex flex-col h-[700px]">
                 <h2 class="text-xl font-semibold mb-4">Preview</h2>
                 <div id="feedPreview" class="space-y-4 overflow-y-auto flex-1 pr-2">
                     <div class="text-center text-gray-500">
