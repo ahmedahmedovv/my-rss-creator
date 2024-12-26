@@ -186,13 +186,21 @@ def analyze_page_structure(tree) -> list[dict]:
             
             if len(content_elements) >= 3:
                 content_samples = []
+                unique_hrefs = set()
+                base_url = tree.base_url if hasattr(tree, 'base_url') else None
+                
                 for el in content_elements[:3]:
                     sample_html = el['text'][:100]
                     if el['href']:
                         sample_html = f'<a href="{el["href"]}">{sample_html}</a>'
+                        unique_hrefs.add(el['href'])
                     content_samples.append(sample_html)
                 
-                if content_samples and len(set(content_samples)) >= 2:
+                # Only add selector if there are multiple unique URLs or URLs different from base
+                if (content_samples and 
+                    len(set(content_samples)) >= 2 and 
+                    (len(unique_hrefs) > 1 or 
+                     (base_url and any(href != base_url for href in unique_hrefs)))):
                     selector_data.append({
                         'css': selector,
                         'xpath': xpath,
