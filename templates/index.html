@@ -8,6 +8,19 @@
 </head>
 <body class="bg-gray-50">
     <div class="max-w-[1920px] mx-auto px-4 py-8">
+        <!-- Add loading overlay -->
+        <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span class="text-gray-700">Processing...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add toast notifications container -->
+        <div id="toastContainer" class="fixed bottom-4 right-4 z-50"></div>
+
         <h1 class="text-3xl font-bold text-center mb-8">RSS Generator</h1>
         
         <!-- Main Grid Layout -->
@@ -17,7 +30,9 @@
                 <form id="rssForm">
                     <!-- URL Input -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Website URL</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Website URL
+                        </label>
                         <input type="url" id="url" required 
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                placeholder="https://example.com">
@@ -245,6 +260,7 @@
     // Handle form submission for preview generation
     document.getElementById('rssForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        showLoading();
         
         const url = document.getElementById('url').value;
         const titleSelector = document.getElementById('titleSelector').value;
@@ -324,6 +340,8 @@
             // Enable save button after successful preview
             saveButton.disabled = false;
 
+            showToast('Preview generated successfully!');
+
         } catch (error) {
             console.error('Error generating preview:', error);
             previewContainer.innerHTML = `
@@ -332,22 +350,26 @@
                     <p class="text-sm text-red-500 mt-1">Please try again or check the console for details.</p>
                 </div>
             `;
+            showToast('Error generating preview: ' + error.message, 'error');
         } finally {
             generateButton.disabled = false;
+            hideLoading();
         }
     });
 
     // Add save feed functionality
     async function saveFeed() {
-        const url = document.getElementById('url').value;
-        const titleSelector = document.getElementById('titleSelector').value;
-        const descriptionSelector = document.getElementById('descriptionSelector').value;
         const saveButton = document.getElementById('saveButton');
         const savedFeedContainer = document.getElementById('savedFeedContainer');
         
+        showLoading(); // Show loading overlay
         saveButton.disabled = true;
         
         try {
+            const url = document.getElementById('url').value;
+            const titleSelector = document.getElementById('titleSelector').value;
+            const descriptionSelector = document.getElementById('descriptionSelector').value;
+            
             const response = await fetch('/save_feed', {
                 method: 'POST',
                 headers: {
@@ -363,18 +385,20 @@
             const data = await response.json();
 
             if (data.error) {
-                alert('Error saving feed: ' + data.error);
+                showToast('Error saving feed: ' + data.error, 'error');
                 return;
             }
 
             // Show success message and RSS URL
             savedFeedContainer.classList.remove('hidden');
             document.getElementById('savedFeedUrl').value = data.rss_url;
+            showToast('Feed saved successfully!');
 
         } catch (error) {
             console.error('Error saving feed:', error);
-            alert('Error saving feed. Please try again.');
+            showToast('Error saving feed: ' + error.message, 'error');
         } finally {
+            hideLoading(); // Hide loading overlay
             saveButton.disabled = false;
         }
     }
@@ -392,6 +416,30 @@
         setTimeout(() => {
             button.textContent = originalText;
         }, 2000);
+    }
+
+    // Show loading overlay
+    function showLoading() {
+        document.getElementById('loadingOverlay').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+
+    // Toast notification system
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-lg shadow-lg mb-2 transition-opacity duration-300`;
+        toast.textContent = message;
+        
+        const container = document.getElementById('toastContainer');
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => container.removeChild(toast), 300);
+        }, 3000);
     }
     </script>
 </body>
