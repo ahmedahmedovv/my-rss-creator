@@ -348,6 +348,9 @@ def fetch_selectors():
             print(f"Found {len(selectors)} selectors")  # Debug log
             
             if selectors:
+                # Sort selectors by example count in descending order
+                selectors.sort(key=lambda x: x['example'], reverse=True)
+                
                 # Fix encoding in selector samples
                 for selector in selectors:
                     selector['samples'] = [ftfy.fix_text(sample) for sample in selector['samples']]
