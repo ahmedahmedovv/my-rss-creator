@@ -44,96 +44,13 @@ supabase = create_client(
 # ---- Helper Functions ----
 
 def analyze_page_structure(tree) -> list[dict]:
-    """Analyze page structure and return potential selectors."""
+    """Analyze page structure and return all potential selectors."""
     selectors = set()
     translator = GenericTranslator()
     selector_data = []
     
-    # Tags that typically contain main content
-    content_tags = {
-        'article', 'main', 'section', 'div', 'span', 'p', 'h1', 'h2', 'h3', 'h4'
-    }
-
-    # Tags to exclude (expanded list)
-    excluded_tags = {
-        # Technical/Meta elements
-        'script', 'style', 'noscript', 'iframe', 'meta', 
-        'link', 'head', 'svg', 'path', 'source', 'img',
-        
-        # Navigation elements
-        'nav', 'header', 'footer', 'sidebar',
-        
-        # Interactive elements
-        'button', 'input', 'select', 'textarea',
-        
-        # Advertisement related
-        'ads', 'advertisement', 'banner',
-        
-        # Social media
-        'social', 'share-buttons', 'comments'
-    }
-
-    # Common patterns to exclude (expanded)
-    excluded_text_patterns = {
-        # Navigation patterns
-        'show all', 'view all', 'load more', 'show more',
-        'next page', 'previous page', 'next', 'prev', 'previous',
-        'tümünü gör', 'daha fazla', 'devamı',
-        
-        # UI elements
-        'menu', 'search', 'navigation', 'sidebar',
-        'header', 'footer', 'copyright',
-        
-        # Social/Interactive
-        'share', 'follow us', 'subscribe', 'sign up',
-        'login', 'register', 'comments', 'related articles',
-        
-        # Common footer text
-        'all rights reserved', 'privacy policy', 'terms of service',
-        'contact us', 'about us',
-        
-        # Advertisement related
-        'advertisement', 'sponsored', 'recommended for you',
-        
-        # Common UI buttons
-        'read more', 'learn more', 'click here', 'find out more',
-        'continue reading', 'more details'
-    }
-
-    # Common article container class/id patterns
-    article_patterns = {
-        'article', 'post', 'entry', 'content', 'main',
-        'story', 'news', 'blog-post', 'article-content',
-        'post-content', 'main-content', 'page-content'
-    }
-
-    def is_likely_article_container(element) -> bool:
-        """Check if an element is likely to be an article container."""
-        if element.tag in content_tags:
-            # Check class names
-            classes = element.get('class', '').lower().split()
-            ids = element.get('id', '').lower().split('-')
-            
-            # Check if any class or id contains article patterns
-            return any(pattern in ' '.join(classes + ids) 
-                      for pattern in article_patterns)
-        return False
-
     # Find all elements
     for element in tree.xpath('//*'):
-        # Skip excluded tags
-        if element.tag in excluded_tags:
-            continue
-            
-        # Skip elements with no text content
-        text_content = element.text_content().strip().lower()
-        if not text_content:
-            continue
-
-        # Skip elements with common navigation/UI text
-        if text_content.lower() in excluded_text_patterns:
-            continue
-
         # Get element with classes
         if element.get('class'):
             for cls in element.get('class').split():
@@ -158,22 +75,15 @@ def analyze_page_structure(tree) -> list[dict]:
             
             for el in matching_elements:
                 text = ' '.join(el.text_content().split()).strip()
-                text_lower = text.lower()
                 
-                if (text and 
-                    el.tag not in excluded_tags and 
-                    text_lower not in excluded_text_patterns and
-                    text not in seen_texts and
-                    len(text) > 5):
-                    
-                    # Get the href attribute - either from the element itself or its parent/child a tag
+                if text and text not in seen_texts and not text.startswith('var '):  # Skip script content
+                    # Get the href attribute
                     href = None
                     if el.tag == 'a':
                         href = el.get('href')
                     elif el.getparent() is not None and el.getparent().tag == 'a':
                         href = el.getparent().get('href')
                     else:
-                        # Look for nested a tag
                         a_tag = el.find('.//a')
                         if a_tag is not None:
                             href = a_tag.get('href')
@@ -184,29 +94,21 @@ def analyze_page_structure(tree) -> list[dict]:
                     })
                     seen_texts.add(text)
             
+            # Only add selectors that have 3 or more unique text contents
             if len(content_elements) >= 3:
                 content_samples = []
-                unique_hrefs = set()
-                base_url = tree.base_url if hasattr(tree, 'base_url') else None
-                
                 for el in content_elements[:3]:
                     sample_html = el['text'][:100]
                     if el['href']:
                         sample_html = f'<a href="{el["href"]}">{sample_html}</a>'
-                        unique_hrefs.add(el['href'])
                     content_samples.append(sample_html)
                 
-                # Only add selector if there are multiple unique URLs or URLs different from base
-                if (content_samples and 
-                    len(set(content_samples)) >= 2 and 
-                    (len(unique_hrefs) > 1 or 
-                     (base_url and any(href != base_url for href in unique_hrefs)))):
-                    selector_data.append({
-                        'css': selector,
-                        'xpath': xpath,
-                        'example': len(content_elements),
-                        'samples': content_samples
-                    })
+                selector_data.append({
+                    'css': selector,
+                    'xpath': xpath,
+                    'example': len(content_elements),
+                    'samples': content_samples
+                })
         except:
             continue
             
