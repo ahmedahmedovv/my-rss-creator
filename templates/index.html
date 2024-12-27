@@ -109,6 +109,19 @@
     <script>
     document.getElementById('url').addEventListener('input', debounce(async function(e) {
         const url = e.target.value;
+        
+        // Reset form fields and previews
+        document.getElementById('titleSelector').value = '';
+        document.getElementById('descriptionSelector').value = '';
+        document.getElementById('generateButton').disabled = true;
+        document.getElementById('saveButton').disabled = true;
+        document.getElementById('savedFeedContainer').classList.add('hidden');
+        document.getElementById('feedPreview').innerHTML = `
+            <div class="text-center text-gray-500">
+                Configure selectors and generate preview to see results
+            </div>
+        `;
+        
         if (!url) return;
 
         const selectorList = document.getElementById('selectorList');
