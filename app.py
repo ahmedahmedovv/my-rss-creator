@@ -22,12 +22,14 @@ import random
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 import ftfy
+from forms import FeedbackForm
+import secrets
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-app = Flask(__name__)
-
-# Load environment variables from .env file
 load_dotenv()
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('FLASK_SECRET_KEY', secrets.token_hex(32))
 
 # Initialize Supabase client with service role key
 supabase_url = os.getenv("SUPABASE_URL")
@@ -40,6 +42,9 @@ supabase = create_client(
     supabase_url,
     supabase_key
 )
+
+# Generate a secure random key
+print("Generated Secret Key:", secrets.token_hex(32))
 
 # ---- Helper Functions ----
 
@@ -364,6 +369,41 @@ def save_feed():
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    form = FeedbackForm()
+    if form.validate_on_submit():
+        try:
+            # Save feedback to Supabase
+            feedback_data = {
+                'email': form.email.data,
+                'feedback_type': form.feedback_type.data,
+                'message': form.message.data,
+                'created_at': datetime.now().isoformat()
+            }
+            
+            result = supabase.table('user_feedback').insert(feedback_data).execute()
+            
+            return jsonify({
+                'message': 'Thank you for your feedback!',
+                'status': 'success'
+            })
+            
+        except Exception as e:
+            return jsonify({
+                'message': f'Error submitting feedback: {str(e)}',
+                'status': 'error'
+            }), 500
+            
+    if form.errors:
+        return jsonify({
+            'message': 'Validation error',
+            'errors': form.errors,
+            'status': 'error'
+        }), 400
+        
+    return render_template('feedback.html', form=form)
 
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 8080))

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - RSS Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-2xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Provide Feedback</h1>
+        
+        <form id="feedbackForm" class="bg-white rounded-lg shadow p-6">
+            {{ form.hidden_tag() }}
+            
+            <div class="space-y-6">
+                <!-- Email Field -->
+                <div>
+                    {{ form.email.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.email(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    <span class="text-red-500 text-sm hidden" id="emailError"></span>
+                </div>
+
+                <!-- Feedback Type Field -->
+                <div>
+                    {{ form.feedback_type.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.feedback_type(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                    <span class="text-red-500 text-sm hidden" id="feedbackTypeError"></span>
+                </div>
+
+                <!-- Message Field -->
+                <div>
+                    {{ form.message.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.message(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", rows="5") }}
+                    <span class="text-red-500 text-sm hidden" id="messageError"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    {{ form.submit(class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                </div>
+            </div>
+        </form>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="hidden mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
+            <p class="text-green-700">Thank you for your feedback!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Reset error messages
+            document.querySelectorAll('.text-red-500').forEach(el => el.classList.add('hidden'));
+            document.getElementById('successMessage').classList.add('hidden');
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/feedback', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Show success message
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    this.reset();
+                } else if (data.errors) {
+                    // Show validation errors
+                    Object.keys(data.errors).forEach(field => {
+                        const errorEl = document.getElementById(`${field}Error`);
+                        if (errorEl) {
+                            errorEl.textContent = data.errors[field].join(', ');
+                            errorEl.classList.remove('hidden');
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting feedback. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -9,3 +9,5 @@ selenium==4.15.2
 gunicorn==21.2.0
 urllib3==2.1.0
 ftfy==6.1.1 
+flask-wtf==1.1.2
+email-validator==2.1.0
