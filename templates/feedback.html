@@ -6,45 +6,83 @@
     <title>Feedback - RSS Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-gray-700 hover:text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                    <span class="ml-4 text-lg font-medium text-gray-900">RSS Generator</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="max-w-2xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center mb-8">Provide Feedback</h1>
-        
-        <form id="feedbackForm" class="bg-white rounded-lg shadow p-6">
-            {{ form.hidden_tag() }}
-            
-            <div class="space-y-6">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Header -->
+            <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-700">
+                <h1 class="text-2xl font-bold text-white">Provide Feedback</h1>
+                <p class="text-blue-100 mt-1">Help us improve your experience</p>
+            </div>
+
+            <!-- Form -->
+            <form id="feedbackForm" class="p-6 space-y-6">
+                {{ form.hidden_tag() }}
+
                 <!-- Email Field -->
                 <div>
                     {{ form.email.label(class="block text-sm font-medium text-gray-700 mb-2") }}
-                    {{ form.email(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
-                    <span class="text-red-500 text-sm hidden" id="emailError"></span>
+                    {{ form.email(class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors", placeholder="your@email.com") }}
+                    <span class="text-red-500 text-sm hidden mt-1" id="emailError"></span>
                 </div>
 
                 <!-- Feedback Type Field -->
                 <div>
                     {{ form.feedback_type.label(class="block text-sm font-medium text-gray-700 mb-2") }}
-                    {{ form.feedback_type(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500") }}
-                    <span class="text-red-500 text-sm hidden" id="feedbackTypeError"></span>
+                    <div class="relative">
+                        {{ form.feedback_type(class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white transition-colors") }}
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-red-500 text-sm hidden mt-1" id="feedbackTypeError"></span>
                 </div>
 
                 <!-- Message Field -->
                 <div>
                     {{ form.message.label(class="block text-sm font-medium text-gray-700 mb-2") }}
-                    {{ form.message(class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500", rows="5") }}
-                    <span class="text-red-500 text-sm hidden" id="messageError"></span>
+                    {{ form.message(class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors", rows="5", placeholder="Please share your thoughts...") }}
+                    <span class="text-red-500 text-sm hidden mt-1" id="messageError"></span>
+                    <p class="mt-1 text-sm text-gray-500">Minimum 10 characters required</p>
                 </div>
 
                 <!-- Submit Button -->
-                <div>
-                    {{ form.submit(class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500") }}
+                <div class="pt-4">
+                    {{ form.submit(class="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200") }}
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
 
         <!-- Success Message -->
-        <div id="successMessage" class="hidden mt-4 bg-green-50 border border-green-200 rounded-lg p-4">
-            <p class="text-green-700">Thank you for your feedback!</p>
+        <div id="successMessage" class="hidden mt-6">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="mt-3 text-lg font-medium text-green-900">Thank you for your feedback!</h3>
+                <p class="mt-2 text-sm text-green-700">Your input helps us improve the RSS Generator.</p>
+                <button onclick="window.location.href='/'" class="mt-4 text-sm text-green-600 hover:text-green-800 font-medium">
+                    Return to Homepage
+                </button>
+            </div>
         </div>
     </div>
 
@@ -55,6 +93,12 @@
             // Reset error messages
             document.querySelectorAll('.text-red-500').forEach(el => el.classList.add('hidden'));
             document.getElementById('successMessage').classList.add('hidden');
+            
+            // Disable submit button and show loading state
+            const submitButton = this.querySelector('input[type="submit"]');
+            const originalText = submitButton.value;
+            submitButton.value = 'Sending...';
+            submitButton.disabled = true;
             
             const formData = new FormData(this);
             
@@ -67,9 +111,11 @@
                 const data = await response.json();
                 
                 if (data.status === 'success') {
-                    // Show success message
-                    document.getElementById('successMessage').classList.remove('hidden');
-                    this.reset();
+                    // Show success message and scroll to it
+                    this.classList.add('hidden');
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.classList.remove('hidden');
+                    successMessage.scrollIntoView({ behavior: 'smooth' });
                 } else if (data.errors) {
                     // Show validation errors
                     Object.keys(data.errors).forEach(field => {
@@ -79,10 +125,20 @@
                             errorEl.classList.remove('hidden');
                         }
                     });
+                    
+                    // Scroll to first error
+                    const firstError = document.querySelector('.text-red-500:not(.hidden)');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while submitting feedback. Please try again.');
+            } finally {
+                // Reset button state
+                submitButton.value = originalText;
+                submitButton.disabled = false;
             }
         });
     </script>
